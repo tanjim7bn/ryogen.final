@@ -82,8 +82,8 @@ nav{position:sticky;top:0;z-index:400;background-color:rgba(14,16,20,.92);-webki
 .hero-fade{position:absolute;left:0;right:0;bottom:0;height:140px;z-index:3;pointer-events:none;background:linear-gradient(transparent,var(--bg))}
 .hero-in{position:relative;z-index:6;max-width:var(--maxw);margin:0 auto;padding:70px var(--pad) 90px;min-height:calc(100vh - 70px);display:flex;flex-direction:column;justify-content:center}
 .hero-copy{max-width:560px}
-.kicker{display:inline-flex;align-items:center;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff5a67;background:rgba(227,6,19,.12);border:1px solid rgba(227,6,19,.3);padding:6px 13px;border-radius:100px;margin-bottom:22px;opacity:0;animation:rise .7s .05s var(--ease) forwards}
-.kicker .k-line{display:none}
+.kicker{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff5a67;margin-bottom:22px;opacity:0;animation:rise .7s .05s var(--ease) forwards}
+.kicker .k-line{display:block;width:34px;height:2px;background:var(--red);border-radius:2px;margin-bottom:12px}
 .hero-h{font-size:clamp(2.4rem,4.8vw,3.9rem);font-weight:700;line-height:1.06;letter-spacing:-.035em;margin-bottom:22px;opacity:0;animation:rise .8s .16s var(--ease) forwards}
 .morph-wrap{display:inline-block;position:relative;white-space:nowrap}
 .morph{color:var(--red);font-style:italic;font-weight:600}
@@ -124,7 +124,9 @@ nav{position:sticky;top:0;z-index:400;background-color:rgba(14,16,20,.92);-webki
 /* ---------- LIGHT BODY ---------- */
 .light{background-color:#FBFBF9;color:#15171C}
 .section{padding:clamp(4.5rem,8vw,6.5rem) 0}
-.sec-eyebrow{display:inline-flex;align-items:center;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);background:rgba(227,6,19,.07);border:1px solid rgba(227,6,19,.16);padding:5px 12px;border-radius:100px}
+.sec-eyebrow{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.sec-eyebrow::before{content:'';display:block;width:34px;height:2px;background:var(--red);border-radius:2px;margin-bottom:12px}
+.sec-head.center .sec-eyebrow::before{margin-left:auto;margin-right:auto}
 .sec-h{font-size:clamp(1.85rem,3.4vw,2.7rem);font-weight:700;letter-spacing:-.03em;line-height:1.12;margin:14px 0 14px}
 .sec-h em{font-style:italic;font-weight:600;color:var(--red)}
 .sec-intro{font-size:1.02rem;font-weight:300;color:var(--soft);max-width:560px;line-height:1.65}
