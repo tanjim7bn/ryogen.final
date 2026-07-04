@@ -83,7 +83,7 @@ nav{position:sticky;top:0;z-index:400;background-color:rgba(14,16,20,.92);-webki
 .hero-in{position:relative;z-index:6;max-width:var(--maxw);margin:0 auto;padding:70px var(--pad) 90px;min-height:calc(100vh - 70px);display:flex;flex-direction:column;justify-content:center}
 .hero-copy{max-width:560px}
 .kicker{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff5a67;margin-bottom:22px;opacity:0;animation:rise .7s .05s var(--ease) forwards}
-.kicker .k-line{display:block;width:34px;height:2px;background:var(--red);border-radius:2px;margin-bottom:12px}
+.kicker .k-line{display:none}
 .hero-h{font-size:clamp(2.4rem,4.8vw,3.9rem);font-weight:700;line-height:1.06;letter-spacing:-.035em;margin-bottom:22px;opacity:0;animation:rise .8s .16s var(--ease) forwards}
 .morph-wrap{display:inline-block;position:relative;white-space:nowrap}
 .morph{color:var(--red);font-style:italic;font-weight:600}
@@ -125,8 +125,6 @@ nav{position:sticky;top:0;z-index:400;background-color:rgba(14,16,20,.92);-webki
 .light{background-color:#FBFBF9;color:#15171C}
 .section{padding:clamp(4.5rem,8vw,6.5rem) 0}
 .sec-eyebrow{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
-.sec-eyebrow::before{content:'';display:block;width:34px;height:2px;background:var(--red);border-radius:2px;margin-bottom:12px}
-.sec-head.center .sec-eyebrow::before{margin-left:auto;margin-right:auto}
 .sec-h{font-size:clamp(1.85rem,3.4vw,2.7rem);font-weight:700;letter-spacing:-.03em;line-height:1.12;margin:14px 0 14px}
 .sec-h em{font-style:italic;font-weight:600;color:var(--red)}
 .sec-intro{font-size:1.02rem;font-weight:300;color:var(--soft);max-width:560px;line-height:1.65}
