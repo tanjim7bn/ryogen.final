@@ -620,3 +620,30 @@ body.app{background:#FBFBF9}
 .pf input::placeholder{color:#b8b5ac}
 .acc-save{margin-top:16px;display:flex;justify-content:flex-end}
 @media(max-width:700px){.pf-grid{grid-template-columns:1fr}.prof-top{flex-wrap:wrap}.pt-act{margin-left:0;width:100%}}
+
+/* ===== Student app: My Documents (adaptive) ===== */
+.doc-dests{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:20px}
+.doc-dests .dl{font-size:.8rem;color:var(--muted);font-weight:600;margin-right:2px}
+.dchip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:20px;border:1px solid var(--lline);background:#fff;font-family:Poppins,sans-serif;font-size:.85rem;font-weight:500;color:var(--ink);cursor:pointer}
+.dchip.on{background:var(--red);border-color:var(--red);color:#fff}
+.dchip.soon{opacity:.5;cursor:not-allowed}
+.dchip .flag{width:18px;height:12px;border-radius:2px;overflow:hidden;display:inline-flex;flex-shrink:0}
+.dchip .flag svg{width:100%;height:100%}
+.doc-summary{background:#fff;border:1px solid var(--lline);border-radius:14px;padding:16px 22px;margin-bottom:24px;display:flex;align-items:center;gap:18px}
+.doc-summary .ds-t{font-weight:600;color:var(--ink);white-space:nowrap;font-size:.92rem}
+.doc-summary .ds-bar{flex:1;height:8px;background:var(--paper-2);border-radius:8px;overflow:hidden}
+.doc-summary .ds-bar i{display:block;height:100%;background:var(--green);border-radius:8px;transition:width .25s}
+.doc-summary .ds-n{font-weight:700;color:var(--ink);white-space:nowrap;font-size:.92rem}
+.doc-cat h3{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;margin:22px 0 10px}
+.doc-row{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--lline);border-radius:12px;padding:13px 18px;margin-bottom:8px}
+.doc-ic{width:36px;height:36px;border-radius:9px;background:var(--paper);color:var(--soft);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.doc-row.done .doc-ic{background:var(--green-bg);color:var(--green)}
+.doc-info{flex:1;min-width:0}
+.doc-name{font-weight:600;color:var(--ink);font-size:.92rem}
+.doc-req{font-size:.72rem;color:var(--muted);margin-top:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.dreq-badge{font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--paper);border:1px solid var(--lline);color:var(--soft);letter-spacing:.02em}
+.doc-status{flex-shrink:0}
+.done-tag{display:inline-flex;align-items:center;gap:5px;color:var(--green);font-weight:600;font-size:.82rem}
+.doc-up{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:1px solid var(--red);color:var(--red);background:#fff;font-family:Poppins,sans-serif;font-weight:600;font-size:.82rem;cursor:pointer}
+.doc-up:hover{background:var(--red-soft)}
+@media(max-width:700px){.doc-row{flex-wrap:wrap}.doc-status{width:100%;margin-left:50px}}
