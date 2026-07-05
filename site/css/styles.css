@@ -410,3 +410,47 @@ footer{border-top:1px solid var(--dk-line);padding:64px 0 32px;background-color:
 .fit-total .bn{font-size:2.9rem;font-weight:700;color:var(--red);letter-spacing:-.03em;line-height:1}
 .fit-total .bt{font-weight:600;color:var(--ink);font-size:.98rem}
 .fit-total .bs{font-size:.75rem;color:var(--muted)}
+
+/* ===== Tool pages: shared mockup components ===== */
+.lang{font-size:.58rem;font-weight:600;padding:3px 7px;border-radius:5px;background:var(--paper-2);color:var(--muted);border:1px solid var(--lline);margin-left:6px}
+.prog{height:6px;background:var(--paper-2);border-radius:6px;overflow:hidden;margin:12px 0 6px}
+.prog i{display:block;height:100%;background:var(--red);border-radius:6px}
+.p-panel .prog{background:rgba(255,255,255,.08)}
+.qcard{background:var(--paper);border:1px solid var(--lline);border-radius:11px;padding:14px;margin-bottom:10px}
+.p-panel .qcard{background:rgba(255,255,255,.04);border-color:var(--dk-line)}
+.qcard .ql{font-size:.62rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+.p-panel .qcard .ql{color:var(--dk-muted)}
+.qcard .qq{font-weight:600;color:var(--ink);margin-top:4px;font-size:.9rem}
+.p-panel .qcard .qq{color:var(--dk-paper)}
+.draftline{height:9px;background:var(--paper-2);border-radius:4px;margin-top:9px}
+.draftline.s{width:70%}.p-panel .draftline{background:rgba(255,255,255,.07)}
+.essay{font-size:.82rem;line-height:1.95;color:var(--soft)}
+.p-panel .essay{color:var(--dk-soft)}
+.hl{background:rgba(227,6,19,.13);border-bottom:2px solid var(--red);padding:1px 2px;border-radius:2px}
+.hl.g{background:var(--green-bg);border-color:var(--green)}
+.scorechips{display:flex;gap:8px;margin-bottom:14px}
+.scorechip{flex:1;background:var(--paper);border:1px solid var(--lline);border-radius:10px;padding:11px;text-align:center}
+.p-panel .scorechip{background:rgba(255,255,255,.04);border-color:var(--dk-line)}
+.scorechip .v{font-size:1.25rem;font-weight:700;color:var(--ink)}
+.p-panel .scorechip .v{color:var(--dk-paper)}
+.scorechip .l{font-size:.62rem;color:var(--muted);margin-top:2px}
+.chk{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--lline-2);font-size:.82rem;color:var(--ink)}
+.chk:last-child{border:none}.p-panel .chk{color:var(--dk-paper);border-color:var(--dk-line)}
+.chk .box{width:18px;height:18px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.66rem;font-weight:700}
+.chk .box.done{background:var(--green);color:#fff}
+.chk .box.todo{border:1.5px solid var(--lline)}
+.chk .cx{margin-left:auto;font-size:.68rem;color:var(--muted)}
+.schol{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--lline-2)}
+.schol:last-child{border:none}.p-panel .schol{border-color:var(--dk-line)}
+.schol .sn{flex:1;font-weight:600;font-size:.84rem;color:var(--ink)}.p-panel .schol .sn{color:var(--dk-paper)}
+.schol .sn small{display:block;font-weight:400;color:var(--muted);font-size:.7rem}
+.schol .amt{font-weight:700;color:var(--red);font-size:.92rem;white-space:nowrap}
+.match{font-size:.56rem;font-weight:700;padding:3px 7px;border-radius:5px;background:var(--green-bg);color:var(--green);text-transform:uppercase;letter-spacing:.03em}
+.tl{position:relative;padding-left:24px}
+.tl::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--lline)}
+.p-panel .tl::before{background:var(--dk-line)}
+.tl-step{position:relative;padding-bottom:18px}.tl-step:last-child{padding-bottom:0}
+.tl-step::before{content:'';position:absolute;left:-21px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--red);border:2px solid var(--card)}
+.p-panel .tl-step::before{border-color:#15171B}
+.tl-step .tt{font-weight:600;font-size:.86rem;color:var(--ink)}.p-panel .tl-step .tt{color:var(--dk-paper)}
+.tl-step .td{font-size:.73rem;color:var(--muted);margin-top:1px}
