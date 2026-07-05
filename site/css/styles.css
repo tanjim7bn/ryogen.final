@@ -488,3 +488,12 @@ footer{border-top:1px solid var(--dk-line);padding:64px 0 32px;background-color:
 .article-body ul{margin:0 0 18px 20px}.article-body li{margin-bottom:8px}
 .article-body blockquote{border-left:3px solid var(--red);padding-left:18px;margin:26px 0;color:var(--ink);font-weight:400;font-style:italic}
 @media(max-width:860px){.post-grid{grid-template-columns:1fr}.feat-post{grid-template-columns:1fr}.feat-post .thumb{min-height:180px}}
+
+/* ===== Landing fixes ===== */
+/* toolkit cards are now links */
+a.tool{text-decoration:none;color:var(--ink);display:block;cursor:pointer}
+a.tool.prime{color:#fff}
+a.tool:hover{transform:translateY(-3px);box-shadow:0 30px 60px -38px rgba(21,23,28,.32)}
+/* dropdown: bridge the gap so hover stays stable, and keep open on click via focus-within */
+.drop::before{content:'';position:absolute;top:-12px;left:0;right:0;height:14px}
+.nav-item:focus-within .drop{opacity:1;visibility:visible;transform:translateY(0);pointer-events:all}
