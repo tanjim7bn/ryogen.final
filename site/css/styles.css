@@ -497,3 +497,7 @@ a.tool:hover{transform:translateY(-3px);box-shadow:0 30px 60px -38px rgba(21,23,
 /* dropdown: bridge the gap so hover stays stable, and keep open on click via focus-within */
 .drop::before{content:'';position:absolute;top:-12px;left:0;right:0;height:14px}
 .nav-item:focus-within .drop{opacity:1;visibility:visible;transform:translateY(0);pointer-events:all}
+
+/* contact 3-col grid, responsive */
+.prob-grid.g3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:860px){.prob-grid.g3{grid-template-columns:1fr}}
