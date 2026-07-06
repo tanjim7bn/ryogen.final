@@ -682,3 +682,28 @@ body.app{background:#FBFBF9}
 .qt .qi{width:26px;height:26px;border-radius:7px;background:var(--red-soft);color:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ov-space{margin-top:20px}
 @media(max-width:820px){.ov-stats{grid-template-columns:1fr}.ov-grid{grid-template-columns:1fr}}
+
+/* ===== Student app: My Applications (board) ===== */
+.apps-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.apps-count{font-size:.9rem;color:var(--muted)}.apps-count b{color:var(--ink)}
+.app-add{display:inline-flex;align-items:center;gap:7px;padding:10px 15px;border-radius:9px;background:var(--red);color:#fff;border:none;font-family:Poppins,sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;text-decoration:none}
+.app-add:hover{background:#c40511}
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kcol{background:var(--paper);border:1px solid var(--lline);border-radius:14px;padding:12px;min-height:220px}
+.kcol-head{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 12px}
+.kcol-head .kt{font-weight:600;font-size:.84rem;color:var(--ink);display:flex;align-items:center;gap:8px}
+.kcol-head .kdot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.kcol-head .kn{font-size:.72rem;color:var(--muted);background:#fff;border:1px solid var(--lline);border-radius:20px;padding:1px 9px}
+.acard{background:#fff;border:1px solid var(--lline);border-radius:11px;padding:13px;margin-bottom:10px;cursor:pointer;transition:box-shadow .15s,transform .15s}
+.acard:hover{box-shadow:0 12px 26px -14px rgba(21,23,28,.22);transform:translateY(-1px)}
+.acard-top{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.acard-plate{width:34px;height:34px;border-radius:8px;border:1px solid var(--lline);background:#fff;display:flex;align-items:center;justify-content:center;padding:5px;flex-shrink:0}
+.acard-plate img{max-width:100%;max-height:100%;object-fit:contain}
+.acard-uni{font-weight:600;font-size:.84rem;color:var(--ink);line-height:1.2}
+.acard-prog{font-size:.71rem;color:var(--muted);margin-top:1px}
+.acard-fit{margin-left:auto;font-size:.72rem;font-weight:700;color:var(--green);flex-shrink:0}
+.acard-meta{display:flex;align-items:center;justify-content:space-between;font-size:.71rem;color:var(--muted);border-top:1px solid var(--lline-2);padding-top:9px;gap:8px}
+.acard-meta .mi{display:flex;align-items:center;gap:5px}
+.kempty{text-align:center;color:var(--muted);font-size:.76rem;padding:24px 8px;border:1px dashed var(--lline);border-radius:10px}
+@media(max-width:900px){.kanban{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.kanban{grid-template-columns:1fr}}
