@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partner Workspace | Ryogen</title>
+<meta name="description" content="Ryogen Partner Workspace. Manage the students you guide, build ranked shortlists, and track applications in one place.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/brand/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   Partner app: shell (Phase 4)
+   NOTE: self-contained for shell approval. Once approved, this block
+   lifts into css/styles.css under "===== Partner app ====="
+   ===================================================================== */
+:root{
+  --red:#E30613; --red-soft:#FDECEE; --red-lite:#ff5a67;
+  --ink:#14161A; --muted:#5A6068; --soft:#F4F5F7; --lline:#E2E4E8;
+  --paper:#FFFFFF; --dk-paper:#101216; --dk-soft:#181B20; --dk-line:#262A31;
+  --green:#1E9E5A; --green-bg:#E7F6EE; --teal:#0E8E8E; --amber:#B97E10; --amber-bg:#FBF3E4;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body.papp{font-family:'Poppins',sans-serif;background:var(--soft);color:var(--ink);min-height:100vh}
+img{max-width:100%}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+/* ---- layout frame ---- */
+.pshell{display:flex;min-height:100vh}
+.pmain{flex:1;min-width:0;display:flex;flex-direction:column}
+
+/* ---- sidebar ---- */
+.pside{width:248px;flex-shrink:0;background:var(--dk-paper);color:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.pside-brand{display:flex;align-items:center;gap:10px;padding:20px 18px 16px;border-bottom:1px solid var(--dk-line)}
+.pside-brand img{height:26px;width:auto;display:block}
+.pside-brand .bword{font-weight:700;font-size:17px;letter-spacing:.2px}
+.pside-brand .bword span{color:var(--red)}
+.pside-tag{font-size:9.5px;font-weight:600;letter-spacing:.14em;color:var(--red-lite);padding:14px 18px 6px;text-transform:uppercase}
+.pnav{display:flex;flex-direction:column;gap:2px;padding:4px 10px;flex:1;overflow-y:auto}
+.pnav-i{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;color:#B9BEC6;font-size:13.5px;font-weight:600;background:transparent;border:0;text-align:left;width:100%;transition:background .18s var(--ease),color .18s var(--ease)}
+.pnav-i svg{width:17px;height:17px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.pnav-i:hover{background:var(--dk-soft);color:#fff}
+.pnav-i.on{background:var(--red);color:#fff}
+.pside-user{border-top:1px solid var(--dk-line);padding:14px 16px;display:flex;align-items:center;gap:10px}
+.pside-user .av{width:34px;height:34px;border-radius:9px;background:var(--dk-soft);border:1px solid var(--dk-line);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--red-lite)}
+.pside-user .who{min-width:0}
+.pside-user .who b{display:block;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pside-user .who span{font-size:10.5px;color:#7B818A}
+.pside-user a{margin-left:auto;color:#7B818A;font-size:11px;font-weight:600}
+.pside-user a:hover{color:#fff}
+
+/* ---- topbar ---- */
+.ptop{background:var(--paper);border-bottom:1px solid var(--lline);padding:14px 26px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:30}
+.pburger{display:none;background:none;border:1px solid var(--lline);border-radius:8px;width:36px;height:36px;align-items:center;justify-content:center}
+.pburger svg{width:18px;height:18px;stroke:var(--ink);stroke-width:2;fill:none;stroke-linecap:round}
+.ptop-t h1{font-size:16.5px;font-weight:700;line-height:1.2}
+.ptop-t p{font-size:11.5px;color:var(--muted)}
+.ptop-sp{flex:1}
+.psearch{display:flex;align-items:center;gap:8px;background:var(--soft);border:1px solid var(--lline);border-radius:9px;padding:8px 12px;width:230px}
+.psearch svg{width:14px;height:14px;stroke:var(--muted);stroke-width:2;fill:none;stroke-linecap:round}
+.psearch input{border:0;background:transparent;outline:0;font-family:inherit;font-size:12.5px;width:100%;color:var(--ink)}
+.pbell{position:relative;background:none;border:1px solid var(--lline);border-radius:9px;width:36px;height:36px;display:flex;align-items:center;justify-content:center}
+.pbell svg{width:16px;height:16px;stroke:var(--ink);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.pbell i{position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid #fff}
+.pbtn{background:var(--red);color:#fff;border:0;border-radius:9px;padding:9px 16px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:7px;transition:opacity .18s var(--ease)}
+.pbtn:hover{opacity:.9}
+.pbtn svg{width:13px;height:13px;stroke:#fff;stroke-width:2.2;fill:none;stroke-linecap:round}
+
+/* ---- content ---- */
+.pbody{padding:24px 26px 40px;max-width:1180px;width:100%}
+.psec{display:none}
+.psec.on{display:block;animation:pfade .25s var(--ease)}
+@keyframes pfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+.sample{display:inline-flex;align-items:center;gap:5px;background:var(--amber-bg);color:var(--amber);font-size:9.5px;font-weight:600;letter-spacing:.06em;padding:3px 8px;border-radius:5px;text-transform:uppercase}
+
+/* stats */
+.pstats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0 20px}
+.pstat{background:var(--paper);border:1px solid var(--lline);border-radius:13px;padding:16px 16px 14px}
+.pstat .k{font-size:10.5px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+.pstat .v{font-size:25px;font-weight:700;line-height:1.15;margin-top:6px}
+.pstat .d{font-size:11px;color:var(--muted);margin-top:4px}
+.pstat .d b{color:var(--green);font-weight:600}
+.pstat.hot{background:var(--dk-paper);border-color:var(--dk-paper);color:#fff}
+.pstat.hot .k{color:var(--red-lite)}
+.pstat.hot .d{color:#9BA1AA}
+
+/* two-col */
+.pgrid{display:grid;grid-template-columns:1.9fr 1fr;gap:14px;align-items:start}
+.pgrid>div{min-width:0}
+.ptab-wrap{overflow-x:auto}
+.pcard{background:var(--paper);border:1px solid var(--lline);border-radius:13px;padding:18px}
+.pcard-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.pcard-h h2{font-size:13.5px;font-weight:700}
+.pcard-h .lnk{margin-left:auto;font-size:11.5px;font-weight:600;color:var(--red);background:none;border:0}
+
+/* funnel */
+.pfun{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.pfun-r{display:grid;grid-template-columns:92px 1fr 52px;align-items:center;gap:10px;font-size:11.5px}
+.pfun-r .n{color:var(--muted);font-weight:600}
+.pfun-r .bar{height:9px;border-radius:6px;background:var(--soft);overflow:hidden}
+.pfun-r .bar i{display:block;height:100%;border-radius:6px;background:var(--red)}
+.pfun-r .v{font-weight:700;text-align:right}
+
+/* table */
+.ptab{width:100%;border-collapse:collapse;font-size:12px}
+.ptab th{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--lline)}
+.ptab td{padding:11px 10px;border-bottom:1px solid var(--lline);vertical-align:middle}
+.ptab tr:last-child td{border-bottom:0}
+.ptab .st{display:flex;align-items:center;gap:9px}
+.ptab .st .av{width:28px;height:28px;border-radius:8px;background:var(--soft);border:1px solid var(--lline);display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:var(--red)}
+.ptab .st b{font-weight:600;font-size:12px}
+.ptab .st span{display:block;font-size:10.5px;color:var(--muted)}
+.pill{display:inline-block;font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px}
+.pill.prep{background:var(--soft);color:var(--muted)}
+.pill.sub{background:var(--red-soft);color:var(--red)}
+.pill.off{background:var(--green-bg);color:var(--green)}
+
+/* side list */
+.pdl{display:flex;flex-direction:column;gap:11px}
+.pdl-i{display:flex;gap:10px;align-items:flex-start}
+.pdl-i .dt{flex-shrink:0;width:40px;text-align:center;background:var(--soft);border:1px solid var(--lline);border-radius:8px;padding:5px 0}
+.pdl-i .dt b{display:block;font-size:13px;font-weight:700;line-height:1.1}
+.pdl-i .dt span{font-size:8.5px;font-weight:600;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.pdl-i .tx b{display:block;font-size:12px;font-weight:600;line-height:1.3}
+.pdl-i .tx span{font-size:10.5px;color:var(--muted)}
+
+/* placeholder sections */
+.pempty{background:var(--paper);border:1px dashed var(--lline);border-radius:13px;padding:52px 24px;text-align:center;margin-top:16px}
+.pempty .ic{width:44px;height:44px;border-radius:12px;background:var(--red-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.pempty .ic svg{width:20px;height:20px;stroke:var(--red);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.pempty h3{font-size:14px;font-weight:700}
+.pempty p{font-size:12px;color:var(--muted);max-width:420px;margin:6px auto 0;line-height:1.55}
+
+/* drawer overlay */
+.pov{display:none;position:fixed;inset:0;background:rgba(16,18,22,.5);z-index:40}
+.pov.on{display:block}
+
+/* ---- responsive ---- */
+@media(max-width:960px){
+  .pside{position:fixed;left:0;top:0;z-index:50;transform:translateX(-100%);transition:transform .28s var(--ease)}
+  .pside.open{transform:none}
+  .pburger{display:flex}
+  .pstats{grid-template-columns:repeat(2,1fr)}
+  .pgrid{grid-template-columns:1fr}
+  .psearch{display:none}
+}
+@media(max-width:520px){
+  .ptop{padding:12px 14px}
+  .pbody{padding:18px 14px 34px}
+  .pstats{grid-template-columns:1fr 1fr;gap:10px}
+  .pstat .v{font-size:21px}
+  .pbtn span{display:none}
+  .pbtn{padding:9px 11px}
+}
+</style>
+</head>
+<body class="papp">
+<div class="pshell">
+
+  <!-- ============ sidebar ============ -->
+  <aside class="pside" id="pside">
+    <a class="pside-brand" href="/">
+      <img src="/assets/brand/ryogen-dark.png" alt="Ryogen" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <span class="bword" style="display:none">ryogen<span>.</span></span>
+    </a>
+    <div class="pside-tag">Partner Workspace</div>
+    <nav class="pnav" id="pnav">
+      <button class="pnav-i on" data-sec="overview">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Overview
+      </button>
+      <button class="pnav-i" data-sec="students">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16.5 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Students
+      </button>
+      <button class="pnav-i" data-sec="shortlists">
+        <svg viewBox="0 0 24 24"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
+        Shortlists
+      </button>
+      <button class="pnav-i" data-sec="applications">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg>
+        Applications
+      </button>
+      <button class="pnav-i" data-sec="analytics">
+        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-5 4 3 5-7"/></svg>
+        Analytics
+      </button>
+      <button class="pnav-i" data-sec="commissions">
+        <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+        Commissions &amp; Payments
+      </button>
+      <button class="pnav-i" data-sec="settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </button>
+    </nav>
+    <div class="pside-user">
+      <div class="av">SG</div>
+      <div class="who"><b>Scholars Gate School</b><span>Partner account</span></div>
+      <a href="/login.html">Log out</a>
+    </div>
+  </aside>
+  <div class="pov" id="pov"></div>
+
+  <!-- ============ main ============ -->
+  <div class="pmain">
+    <header class="ptop">
+      <button class="pburger" id="pburger" aria-label="Open menu">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+      </button>
+      <div class="ptop-t">
+        <h1 id="ptitle">Overview</h1>
+        <p id="psub">Your workspace at a glance</p>
+      </div>
+      <div class="ptop-sp"></div>
+      <div class="psearch">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" placeholder="Search students, programs..." aria-label="Search">
+      </div>
+      <button class="pbell" aria-label="Notifications"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><i></i></button>
+      <button class="pbtn"><svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></svg><span>Add student</span></button>
+    </header>
+
+    <main class="pbody">
+
+      <!-- ===== Overview ===== -->
+      <section class="psec on" id="sec-overview">
+        <span class="sample">Sample data</span>
+        <div class="pstats">
+          <div class="pstat hot"><div class="k">Student profiles</div><div class="v">1,240</div><div class="d"><b>+38</b> this month</div></div>
+          <div class="pstat"><div class="k">Shortlists built</div><div class="v">980</div><div class="d"><b>+22</b> this month</div></div>
+          <div class="pstat"><div class="k">Applications</div><div class="v">640</div><div class="d"><b>+17</b> this month</div></div>
+          <div class="pstat"><div class="k">Enrolments</div><div class="v">210</div><div class="d"><b>+6</b> this month</div></div>
+        </div>
+
+        <div class="pgrid">
+          <div>
+            <div class="pcard" style="margin-bottom:14px">
+              <div class="pcard-h"><h2>Pipeline this intake</h2><button class="lnk" data-go="analytics">View analytics</button></div>
+              <div class="pfun">
+                <div class="pfun-r"><span class="n">Profiles</span><span class="bar"><i style="width:100%"></i></span><span class="v">1,240</span></div>
+                <div class="pfun-r"><span class="n">Shortlisted</span><span class="bar"><i style="width:79%"></i></span><span class="v">980</span></div>
+                <div class="pfun-r"><span class="n">Applied</span><span class="bar"><i style="width:52%"></i></span><span class="v">640</span></div>
+                <div class="pfun-r"><span class="n">Offers</span><span class="bar"><i style="width:27%"></i></span><span class="v">335</span></div>
+                <div class="pfun-r"><span class="n">Enrolled</span><span class="bar"><i style="width:17%"></i></span><span class="v">210</span></div>
+              </div>
+            </div>
+
+            <div class="pcard">
+              <div class="pcard-h"><h2>Recent students</h2><button class="lnk" data-go="students">Open Students</button></div>
+              <div class="ptab-wrap">
+              <table class="ptab">
+                <thead><tr><th>Student</th><th>Target</th><th>Stage</th><th>Updated</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="st"><div class="av">NA</div><div><b>Nafisa Anjum</b><span>CS, GPA 3.8</span></div></div></td><td>Waseda University</td><td><span class="pill sub">Submitted</span></td><td>2h ago</td></tr>
+                  <tr><td><div class="st"><div class="av">RH</div><div><b>Rafid Hasan</b><span>Business, GPA 3.5</span></div></div></td><td>Monash Malaysia</td><td><span class="pill off">Offer</span></td><td>1d ago</td></tr>
+                  <tr><td><div class="st"><div class="av">TI</div><div><b>Tasnim Islam</b><span>Engineering, GPA 3.9</span></div></div></td><td>University of Tsukuba</td><td><span class="pill prep">Preparing</span></td><td>2d ago</td></tr>
+                  <tr><td><div class="st"><div class="av">SK</div><div><b>Sajid Karim</b><span>Data Science, GPA 3.6</span></div></div></td><td>UTM</td><td><span class="pill sub">Submitted</span></td><td>3d ago</td></tr>
+                </tbody>
+              </table>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="pcard" style="margin-bottom:14px">
+              <div class="pcard-h"><h2>Upcoming deadlines</h2></div>
+              <div class="pdl">
+                <div class="pdl-i"><div class="dt"><b>30</b><span>Nov</span></div><div class="tx"><b>Waseda University</b><span>Application deadline, 12 students affected</span></div></div>
+                <div class="pdl-i"><div class="dt"><b>15</b><span>Dec</span></div><div class="tx"><b>University of Tsukuba</b><span>Application deadline, 8 students affected</span></div></div>
+                <div class="pdl-i"><div class="dt"><b>10</b><span>Jan</span></div><div class="tx"><b>MEXT Scholarship</b><span>Document submission closes</span></div></div>
+                <div class="pdl-i"><div class="dt"><b>01</b><span>Feb</span></div><div class="tx"><b>Monash Malaysia</b><span>Intake application closes</span></div></div>
+              </div>
+            </div>
+            <div class="pcard">
+              <div class="pcard-h"><h2>Quick actions</h2></div>
+              <div class="pdl">
+                <div class="pdl-i"><div class="tx"><b>Import student profiles</b><span>Bring your existing records into the workspace</span></div></div>
+                <div class="pdl-i"><div class="tx"><b>Build a ranked shortlist</b><span>Data-backed options for any student in minutes</span></div></div>
+                <div class="pdl-i"><div class="tx"><b>Invite a team member</b><span>Give your staff their own workspace access</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== placeholders (built after shell approval) ===== -->
+      <section class="psec" id="sec-students">
+        <div class="pempty">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/></svg></div>
+          <h3>Students</h3>
+          <p>The full student CRM: searchable records, profile detail views, notes, and stage management for every student you guide. Builds next after shell approval.</p>
+        </div>
+      </section>
+      <section class="psec" id="sec-shortlists">
+        <div class="pempty">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></div>
+          <h3>Shortlists</h3>
+          <p>Ranked, data-backed university shortlists built per student, ready to review together. Builds after shell approval.</p>
+        </div>
+      </section>
+      <section class="psec" id="sec-applications">
+        <div class="pempty">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
+          <h3>Applications</h3>
+          <p>Every application across your students in one board: stages, documents, and timelines. Builds after shell approval.</p>
+        </div>
+      </section>
+      <section class="psec" id="sec-analytics">
+        <div class="pempty">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-5 4 3 5-7"/></svg></div>
+          <h3>Analytics</h3>
+          <p>Cohort funnels, destination trends, and intake performance across your workspace. Builds after shell approval.</p>
+        </div>
+      </section>
+      <section class="psec" id="sec-commissions">
+        <div class="pempty">
+          <div class="ic"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+          <h3>Commissions &amp; Payments</h3>
+          <p>Track earned commissions per enrolment, payment status, and statements. Builds after shell approval.</p>
+        </div>
+      </section>
+      <section class="psec" id="sec-settings">
+        <div class="pempty">
+          <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M2 12h3"/><path d="M19 12h3"/></svg></div>
+          <h3>Settings</h3>
+          <p>Organization profile, team members and roles, and workspace preferences. Builds after shell approval.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var titles={
+    overview:['Overview','Your workspace at a glance'],
+    students:['Students','Every student you guide, in one place'],
+    shortlists:['Shortlists','Ranked options, ready to review'],
+    applications:['Applications','Every application, every stage'],
+    analytics:['Analytics','How your cohort is performing'],
+    commissions:['Commissions & Payments','Earnings and statements'],
+    settings:['Settings','Workspace and team']
+  };
+  function go(sec){
+    var items=document.querySelectorAll('.pnav-i');
+    for(var i=0;i<items.length;i++){
+      if(items[i].getAttribute('data-sec')===sec){items[i].classList.add('on');}
+      else{items[i].classList.remove('on');}
+    }
+    var secs=document.querySelectorAll('.psec');
+    for(var j=0;j<secs.length;j++){secs[j].classList.remove('on');}
+    var el=document.getElementById('sec-'+sec);
+    if(el){el.classList.add('on');}
+    if(titles[sec]){
+      document.getElementById('ptitle').textContent=titles[sec][0];
+      document.getElementById('psub').textContent=titles[sec][1];
+    }
+    closeSide();
+    window.scrollTo(0,0);
+  }
+  var nav=document.getElementById('pnav');
+  nav.addEventListener('click',function(e){
+    var b=e.target.closest('.pnav-i');
+    if(b){go(b.getAttribute('data-sec'));}
+  });
+  document.addEventListener('click',function(e){
+    var g=e.target.closest('[data-go]');
+    if(g){go(g.getAttribute('data-go'));}
+  });
+  var side=document.getElementById('pside');
+  var ov=document.getElementById('pov');
+  function closeSide(){side.classList.remove('open');ov.classList.remove('on');}
+  document.getElementById('pburger').addEventListener('click',function(){
+    side.classList.add('open');ov.classList.add('on');
+  });
+  ov.addEventListener('click',closeSide);
+});
+</script>
+</body>
+</html>
