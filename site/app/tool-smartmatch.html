@@ -27,20 +27,24 @@
   <aside class="tool-prof">
     <h3>Your profile snapshot</h3>
     <div class="tp-sub">SmartMatch reads this from My Profile</div>
-    <div class="tp-rows">
-      <div class="tp-row"><span class="k">GPA</span><span class="v">3.72 / 4.00</span></div>
-      <div class="tp-row"><span class="k">IELTS</span><span class="v">7.0</span></div>
-      <div class="tp-row"><span class="k">Intended major</span><span class="v">Computer Science</span></div>
-      <div class="tp-row"><span class="k">Level</span><span class="v">Undergraduate</span></div>
-      <div class="tp-row"><span class="k">Budget</span><span class="v">USD 12,000 / yr</span></div>
-      <div class="tp-row"><span class="k">Destinations</span><span class="v">Japan, Malaysia</span></div>
+    <div class="tp-rows" id="tpRows">
+      <label class="tp-field"><span class="tpf-k">GPA</span><input class="tpf-in" data-f="gpa" value="3.72" /></label>
+      <label class="tp-field"><span class="tpf-k">IELTS</span><input class="tpf-in" data-f="ielts" value="7.0" /></label>
+      <label class="tp-field"><span class="tpf-k">Intended major</span><input class="tpf-in" data-f="major" value="Computer Science" /></label>
+      <label class="tp-field"><span class="tpf-k">Level</span><select class="tpf-in" data-f="level"><option>Undergraduate</option><option>Master's</option><option>PhD</option></select></label>
+      <label class="tp-field"><span class="tpf-k">Budget / yr (USD)</span><input class="tpf-in" data-f="budget" value="12000" /></label>
+      <div class="tp-field"><span class="tpf-k">Destinations</span><div class="tpf-dests">
+        <button class="tpf-dest on" data-d="jp">Japan</button><button class="tpf-dest on" data-d="my">Malaysia</button>
+        <button class="tpf-dest" data-d="uk">UK</button><button class="tpf-dest" data-d="ca">Canada</button>
+      </div></div>
+    </div>
     </div>
     <button class="tp-run" id="runBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Run SmartMatch</button>
     <a class="tp-edit" href="/app/dashboard.html">Details changed? <u>Update your profile</u></a>
   </aside>
 
   <section>
-    <div class="tool-res-head" id="resHead"></div>
+    <div class="tool-res-head" id="resHead"></div><div class="mm-toast" id="mmToast"></div>
     <div id="resArea">
       <div class="tool-empty"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
       <b>No matches generated yet</b><span>Run SmartMatch and your ranked shortlist appears here, scored against each university's real requirements and past admissions like yours.</span></div>
@@ -71,10 +75,29 @@ return '<div class="match-card" style="animation-delay:'+(i*90)+'ms">'
 +'<span class="mcb"><span class="k">Budget</span><span class="b"><i style="width:'+m.b+'%"></i></span></span>'
 +'<span class="mcb"><span class="k">Requirements</span><span class="b"><i style="width:'+m.r+'%"></i></span></span>'
 +'</div><div class="mc-facts">'+m.facts.map(function(f){return '<span>'+f+'</span>'}).join('')+'</div></div>'
-+ring(m.fit)+'</div>';
++ring(m.fit)
++'<button class="mc-add" data-add="'+i+'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Add to my applications</button>'
++'</div>';
 }
 var run=document.getElementById('runBtn'),area=document.getElementById('resArea'),head=document.getElementById('resHead');
+var added={};
+function readProfile(){
+  var p={};document.querySelectorAll('.tpf-in').forEach(function(el){p[el.dataset.f]=el.value});
+  var d=[];document.querySelectorAll('.tpf-dest.on').forEach(function(el){d.push(el.dataset.d)});
+  p.dests=d;return p;
+}
+document.querySelectorAll('.tpf-dest').forEach(function(el){el.addEventListener('click',function(){el.classList.toggle('on')})});
+function toast(msg){var t=document.getElementById('mmToast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2200);}
+document.getElementById('resArea').addEventListener('click',function(e){
+  var a=e.target.closest('[data-add]');if(!a)return;
+  var idx=+a.dataset.add;var m=M[idx];
+  if(added[idx]){toast(m.u+' is already in your applications');return;}
+  added[idx]=1;a.classList.add('done');a.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 6"/></svg>Added to applications';
+  toast(m.u+' added to My Applications');
+});
 run.addEventListener('click',function(){
+  var prof=readProfile();
+  var destName={jp:'Japan',my:'Malaysia',uk:'UK',ca:'Canada'};
   run.disabled=true;run.textContent='Matching...';
   head.innerHTML='';
   var sk='';for(var i=0;i<3;i++){sk+='<div class="tool-skel"><span class="s" style="width:46px;height:46px"></span><span class="s" style="flex:1;height:40px"></span><span class="s" style="width:58px;height:58px;border-radius:50%"></span></div>';}
