@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="color-scheme" content="light"><title>Dashboard, Ryogen</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/css/styles.css"></head>
+<header class="app-bar">
+<a href="/" class="app-logo"><img src="/assets/brand/ryogen-dark.png" alt="Ryogen"></a>
+<nav class="app-nav">
+<a href="/app/dashboard.html" class="app-link">Dashboard</a>
+<div class="app-dd"><button class="app-link active">Tools <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg></button>
+<div class="app-dd-menu">
+<a href="/app/tool-smartmatch.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="9" r="6"/><path d="M14 14l3 3"/></svg></span>SmartMatch</a>
+<a href="/university-search.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="9" r="6"/><path d="M14 14l3 3"/></svg></span>University Search</a>
+<a href="/essay-builder.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 16l1-4 8-8 3 3-8 8-4 1z"/></svg></span>Essay Builder</a>
+<a href="/essay-review.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h9l3 3v9H4z"/><path d="M7 10l2 2 4-4"/></svg></span>Essay Review</a>
+<a href="/scholarship-search.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3l2 4 4 .5-3 3 .8 4L10 16l-3.8 1.5.8-4-3-3 4-.5z"/></svg></span>Scholarship Search</a>
+<a href="/country-roadmaps.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 15l4-4 3 3 5-5"/><path d="M14 6h3v3"/></svg></span>Country Roadmaps</a>
+</div></div>
+<a href="/bootcamps.html" class="app-link">Bootcamps</a>
+</nav>
+<div class="app-right">
+<button class="app-bell" aria-label="Notifications"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="dot"></span></button>
+<div class="app-user"><span class="un">Tanjim</span><span class="app-avatar">T</span></div>
+</div>
+</header>
+
+<main class="app-main">
+<div class="app-head"><h1>SmartMatch</h1><p>Your honest shortlist. Built from your profile against real university requirements, with nobody profiting from the result.</p></div>
+
+<div class="tool-wrap">
+  <aside class="tool-prof">
+    <h3>Your profile snapshot</h3>
+    <div class="tp-sub">SmartMatch reads this from My Profile</div>
+    <div class="tp-rows">
+      <div class="tp-row"><span class="k">GPA</span><span class="v">3.72 / 4.00</span></div>
+      <div class="tp-row"><span class="k">IELTS</span><span class="v">7.0</span></div>
+      <div class="tp-row"><span class="k">Intended major</span><span class="v">Computer Science</span></div>
+      <div class="tp-row"><span class="k">Level</span><span class="v">Undergraduate</span></div>
+      <div class="tp-row"><span class="k">Budget</span><span class="v">USD 12,000 / yr</span></div>
+      <div class="tp-row"><span class="k">Destinations</span><span class="v">Japan, Malaysia</span></div>
+    </div>
+    <button class="tp-run" id="runBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Run SmartMatch</button>
+    <a class="tp-edit" href="/app/dashboard.html">Details changed? <u>Update your profile</u></a>
+  </aside>
+
+  <section>
+    <div class="tool-res-head" id="resHead"></div>
+    <div id="resArea">
+      <div class="tool-empty"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+      <b>No matches generated yet</b><span>Run SmartMatch and your ranked shortlist appears here, scored against each university's real requirements and past admissions like yours.</span></div>
+    </div>
+    <div class="ph-note">Sample data. Front-end prototype: matching runs on the backend against the university database.</div>
+  </section>
+</div>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+var M=[
+{u:'Waseda University',logo:'waseda',pr:'B.Sc. Computer Science and Engineering \u00b7 Tokyo, Japan',fit:92,a:95,b:78,r:96,facts:['Tuition \u00a51.29M/yr','Deadline Nov 30','English-taught','JASSO eligible']},
+{u:'Monash University Malaysia',logo:'monash_my',pr:'B.CompSci \u00b7 Kuala Lumpur, Malaysia',fit:90,a:92,b:88,r:90,facts:['Tuition RM 47K/yr','Deadline Feb 1','English-taught','Merit awards']},
+{u:'University of Tsukuba',logo:'tsukuba',pr:'B.Sc. Information Science \u00b7 Tsukuba, Japan',fit:88,a:90,b:92,r:84,facts:['Tuition \u00a5536K/yr','Deadline Dec 15','English-taught','MEXT track']},
+{u:'Universiti Teknologi Malaysia',logo:'utm',pr:'B.CompSci Software Engineering \u00b7 Johor Bahru, Malaysia',fit:85,a:86,b:95,r:80,facts:['Low tuition','Deadline Mar 10','English-taught']},
+{u:'Toyo University',logo:'toyo',pr:'B.Sc. Information Networking \u00b7 Tokyo, Japan',fit:79,a:80,b:70,r:82,facts:['Tuition \u00a51.1M/yr','Deadline Jan 20','Some Japanese required']}];
+var CC=2*Math.PI*24;
+function ring(f){var col=f>=88?'#1A8245':(f>=82?'#B45309':'#8A909B');
+return '<span class="mc-fit"><svg width="58" height="58"><circle cx="29" cy="29" r="24" fill="none" stroke="#EFEFEA" stroke-width="5"/><circle cx="29" cy="29" r="24" fill="none" stroke="'+col+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+CC.toFixed(1)+'" stroke-dashoffset="'+(CC*(1-f/100)).toFixed(1)+'"/></svg><span class="p">'+f+'<em>FIT</em></span></span>';}
+function initials(n){return n.split(' ').map(function(w){return w[0]}).join('').slice(0,3).toUpperCase()}
+function card(m,i){
+return '<div class="match-card" style="animation-delay:'+(i*90)+'ms">'
++'<span class="mc-plate"><img src="/assets/logos/'+m.logo+'.png" alt="" onerror="this.parentElement.textContent=\''+initials(m.u)+'\'"></span>'
++'<div class="mc-mid"><div class="u">'+m.u+'</div><div class="pr">'+m.pr+'</div>'
++'<div class="mc-bars">'
++'<span class="mcb"><span class="k">Academics</span><span class="b"><i style="width:'+m.a+'%"></i></span></span>'
++'<span class="mcb"><span class="k">Budget</span><span class="b"><i style="width:'+m.b+'%"></i></span></span>'
++'<span class="mcb"><span class="k">Requirements</span><span class="b"><i style="width:'+m.r+'%"></i></span></span>'
++'</div><div class="mc-facts">'+m.facts.map(function(f){return '<span>'+f+'</span>'}).join('')+'</div></div>'
++ring(m.fit)+'</div>';
+}
+var run=document.getElementById('runBtn'),area=document.getElementById('resArea'),head=document.getElementById('resHead');
+run.addEventListener('click',function(){
+  run.disabled=true;run.textContent='Matching...';
+  head.innerHTML='';
+  var sk='';for(var i=0;i<3;i++){sk+='<div class="tool-skel"><span class="s" style="width:46px;height:46px"></span><span class="s" style="flex:1;height:40px"></span><span class="s" style="width:58px;height:58px;border-radius:50%"></span></div>';}
+  area.innerHTML=sk;
+  setTimeout(function(){
+    head.innerHTML='<h3>Your ranked shortlist</h3><span class="n">'+M.length+' matches</span>';
+    area.innerHTML=M.map(card).join('');
+    run.disabled=false;run.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>Run again';
+  },1400);
+});
+});
+</script>
+</body></html>
