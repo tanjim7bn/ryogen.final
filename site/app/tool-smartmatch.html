@@ -27,17 +27,16 @@
   <aside class="tool-prof">
     <h3>Your profile snapshot</h3>
     <div class="tp-sub">SmartMatch reads this from My Profile</div>
-    <div class="tp-rows" id="tpRows">
+    <div class="tp-rows" id="tpRows"><div class="tpf-pair">
       <label class="tp-field"><span class="tpf-k">GPA</span><input class="tpf-in" data-f="gpa" value="3.72" /></label>
       <label class="tp-field"><span class="tpf-k">IELTS</span><input class="tpf-in" data-f="ielts" value="7.0" /></label>
-      <label class="tp-field"><span class="tpf-k">Intended major</span><input class="tpf-in" data-f="major" value="Computer Science" /></label>
-      <label class="tp-field"><span class="tpf-k">Level</span><select class="tpf-in" data-f="level"><option>Undergraduate</option><option>Master's</option><option>PhD</option></select></label>
+      </div><label class="tp-field"><span class="tpf-k">Intended major</span><input class="tpf-in" data-f="major" value="Computer Science" /></label>
+      <div class="tpf-pair"><label class="tp-field"><span class="tpf-k">Level</span><select class="tpf-in" data-f="level"><option>Undergraduate</option><option>Master's</option><option>PhD</option></select></label>
       <label class="tp-field"><span class="tpf-k">Budget / yr (USD)</span><input class="tpf-in" data-f="budget" value="12000" /></label>
-      <div class="tp-field"><span class="tpf-k">Destinations</span><div class="tpf-dests">
+      </div><div class="tp-field"><span class="tpf-k">Destinations</span><div class="tpf-dests">
         <button class="tpf-dest on" data-d="jp">Japan</button><button class="tpf-dest on" data-d="my">Malaysia</button>
         <button class="tpf-dest" data-d="uk">UK</button><button class="tpf-dest" data-d="ca">Canada</button>
       </div></div>
-    </div>
     </div>
     <button class="tp-run" id="runBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Run SmartMatch</button>
     <a class="tp-edit" href="/app/dashboard.html">Details changed? <u>Update your profile</u></a>
