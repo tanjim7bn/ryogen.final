@@ -1124,3 +1124,8 @@ a.doc-up{text-decoration:none}
 .mm-toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:#14161A;color:#fff;font-size:.82rem;font-weight:500;padding:12px 20px;border-radius:11px;box-shadow:0 12px 34px rgba(20,22,26,.24);opacity:0;pointer-events:none;transition:all .28s var(--ease);z-index:100}
 .mm-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(max-width:560px){.mc-add{width:100%;justify-content:center;margin-top:10px}}
+
+/* SmartMatch layout fix */
+.tpf-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tool-prof .tp-run{margin-top:4px}
+.tool-wrap{align-items:stretch}
