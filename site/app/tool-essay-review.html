@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="color-scheme" content="light"><title>Essay Review, Ryogen</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/css/styles.css"></head><body class="app">
+<header class="app-bar">
+<a href="/" class="app-logo"><img src="/assets/brand/ryogen-dark.png" alt="Ryogen"></a>
+<nav class="app-nav">
+<a href="/app/dashboard.html" class="app-link">Dashboard</a>
+<div class="app-dd"><button class="app-link active">Tools <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg></button>
+<div class="app-dd-menu">
+<a href="/app/tool-smartmatch.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="9" r="6"/><path d="M14 14l3 3"/></svg></span>SmartMatch</a>
+<a href="/university-search.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="9" r="6"/><path d="M14 14l3 3"/></svg></span>University Search</a>
+<a href="/app/tool-essay-builder.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 16l1-4 8-8 3 3-8 8-4 1z"/></svg></span>Essay Builder</a>
+<a href="/app/tool-essay-review.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h9l3 3v9H4z"/><path d="M7 10l2 2 4-4"/></svg></span>Essay Review</a>
+<a href="/scholarship-search.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3l2 4 4 .5-3 3 .8 4L10 16l-3.8 1.5.8-4-3-3 4-.5z"/></svg></span>Scholarship Search</a>
+<a href="/country-roadmaps.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 15l4-4 3 3 5-5"/><path d="M14 6h3v3"/></svg></span>Country Roadmaps</a>
+</div></div>
+</nav>
+<div class="app-right">
+<button class="app-bell" aria-label="Notifications"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="dot"></span></button>
+<div class="app-user"><span class="un">Tanjim</span><span class="app-avatar">T</span></div>
+</div>
+</header>
+
+<main class="app-main">
+<div class="app-head"><h1>Essay Review</h1><p>An honest read, not a flattering guess. Ryogen marks up your draft the way an admissions reader would notice it, and every score traces to something on the page.</p></div>
+
+<div class="et-rev-top">
+  <div class="et-field"><label>Essay type</label><select class="et-select" id="rev-type"></select></div>
+  <div class="et-field"><label>Target program (optional)</label><input class="et-input" type="text" id="rev-target" placeholder="e.g. Waseda University, Computer Science"></div>
+  <button class="app-add" id="run-review" style="height:44px"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h9l3 3v9H4z"/><path d="M7 10l2 2 4-4"/></svg>Review essay</button>
+</div>
+<div class="et-samples">
+  <span class="lbl">Try a sample:</span>
+  <button class="et-chip" data-sample="weak">Weak draft</button>
+  <button class="et-chip" data-sample="strong">Stronger draft</button>
+  <button class="et-chip" data-sample="clear">Clear</button>
+</div>
+<div style="margin-top:14px"><textarea class="et-ta" id="rev-input" rows="7" placeholder="Paste your essay draft here, or load a sample above."></textarea></div>
+
+<div id="rev-out" class="et-hidden">
+  <div class="et-rev-grid">
+    <div class="et-paper">
+      <div class="et-paper-head">Marked up
+        <div class="et-legend">
+          <span class="et-lg"><i style="background:var(--red)"></i>Cliché</span>
+          <span class="et-lg"><i style="background:var(--amber)"></i>Filler</span>
+          <span class="et-lg"><i style="background:#2563EB"></i>Passive</span>
+        </div>
+      </div>
+      <div class="et-manuscript" id="manuscript"></div>
+    </div>
+    <div class="et-report">
+      <div class="et-score">
+        <div class="et-score-ring" id="score-ring"></div>
+        <div class="et-score-tx">
+          <div class="lbl">Overall essay score</div>
+          <div class="band" id="score-band"></div>
+          <div id="delta-wrap"></div>
+        </div>
+      </div>
+      <div class="et-blk"><h4>The breakdown</h4><div id="dim-list"></div></div>
+      <div class="et-blk"><h4>Fix these first</h4><div id="fix-list"></div></div>
+      <div class="et-blk"><h4>What is working</h4><div id="str-list"></div></div>
+      <div class="et-blk"><h4>The numbers</h4><div class="et-stats" id="stat-grid"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="ph-note">Front-end prototype. Runs fully in the browser with no AI and no network calls. Every score comes from counted signals on the page, so it is instant, free, and identical every time. It measures craft, not whether a story lands emotionally, which is the deliberate tradeoff of an AI free tool.</div>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+var DEST={jp:'Japan',my:'Malaysia'};
+var TYPES=[
+ {id:'jp_sop',dest:'jp',name:'Statement of Purpose',target:800,rubric:{specificity:.28,structure:.2,conciseness:.17,clarity:.15,fit:.2},keywords:['research','program','university','field','study','professor','lab']},
+ {id:'jp_research',dest:'jp',name:'Research Plan',target:1000,rubric:{specificity:.3,structure:.24,conciseness:.14,clarity:.14,fit:.18},keywords:['research','question','method','data','hypothesis','study','analysis']},
+ {id:'jp_mext',dest:'jp',name:'MEXT Field of Study and Research Plan',target:900,rubric:{specificity:.3,structure:.22,conciseness:.16,clarity:.12,fit:.2},keywords:['research','method','data','field','study','contribute','plan']},
+ {id:'jp_coe',dest:'jp',name:'Reason for Study Statement',target:450,rubric:{specificity:.26,structure:.22,conciseness:.14,clarity:.18,fit:.2},keywords:['language','study','school','plan','goal','sponsor','course']},
+ {id:'my_ps',dest:'my',name:'Personal Statement',target:650,rubric:{specificity:.26,structure:.19,conciseness:.16,clarity:.16,fit:.23},keywords:['program','university','course','field','study','career']},
+ {id:'my_sop',dest:'my',name:'Statement of Purpose',target:750,rubric:{specificity:.28,structure:.2,conciseness:.16,clarity:.14,fit:.22},keywords:['program','university','experience','field','research','career','goal']},
+ {id:'my_sch',dest:'my',name:'Scholarship Essay',target:600,rubric:{specificity:.24,structure:.2,conciseness:.16,clarity:.15,fit:.25},keywords:['scholarship','goal','contribute','community','achieve','leadership']}
+];
+var CLICHES=["since i was a child","from a young age","for as long as i can remember","ever since i was young","as long as i can remember","i have always been passionate","i have always been fascinated","i have always dreamed","my passion for","passionate about","in today's world","in this modern era","the world is changing","burning desire","make a difference","change the world","step out of my comfort zone","comfort zone","well rounded","think outside the box","hard working","hardworking","team player","fast learner","last but not least","the sky is the limit","reach for the stars","dream came true","ever since i can remember","i knew i wanted to"];
+var FILLERS=["very","really","just","quite","actually","basically","literally","definitely","extremely","totally","simply","obviously","clearly","a lot","lots of","things","stuff","good","nice","great","amazing","awesome","i think","i believe","i feel that","in order to","due to the fact","the fact that","kind of","sort of"];
+var PASSIVE_RE=/\b(is|are|was|were|be|been|being|am)\s+(\w+ed|written|done|made|given|taken|seen|known|shown|built|held|kept|led|met|paid|read|said|sent|told|understood|chosen|driven|grown)\b/gi;
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function syl(w){w=w.toLowerCase().replace(/[^a-z]/g,'');if(w.length<=3)return 1;w=w.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/,'').replace(/^y/,'');var m=w.match(/[aeiouy]{1,2}/g);return m?m.length:1;}
+function listRanges(text,list){var r=[],low=text.toLowerCase();list.forEach(function(p){var i=0;while((i=low.indexOf(p,i))!==-1){var b=low[i-1],a=low[i+p.length];if((!b||/\W/.test(b))&&(!a||/\W/.test(a)))r.push({start:i,end:i+p.length});i+=p.length;}});return r;}
+function reRanges(text,re){var r=[],m;re.lastIndex=0;while((m=re.exec(text))){if(m[0].length)r.push({start:m.index,end:m.index+m[0].length});if(m.index===re.lastIndex)re.lastIndex++;}return r;}
+function clamp(x){return Math.max(2,Math.min(100,Math.round(x)));}
+
+function analyze(text,type,target){
+ var words=text.match(/\b[\w'\u2019-]+\b/g)||[];var w=words.length;
+ var sents=text.split(/[.!?]+/).map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
+ var sc=Math.max(sents.length,1);
+ var paras=text.split(/\n\s*\n/).map(function(p){return p.trim();}).filter(function(p){return p.length>0;});
+ if(paras.length===0&&text.trim())paras=[text.trim()];
+ var avg=w/sc;var sy=words.reduce(function(a,x){return a+syl(x);},0);
+ var flesch=w?Math.round(206.835-1.015*avg-84.6*(sy/Math.max(w,1))):0;
+ var cli=listRanges(text,CLICHES),fil=listRanges(text,FILLERS),pas=reRanges(text,PASSIVE_RE);
+ var cliN=cli.length,filN=fil.length,pasN=pas.length;
+ var advN=(text.match(/\b\w+ly\b/gi)||[]).length;
+ var numbers=(text.match(/\b\d[\d,.%]*\b/g)||[]).length;
+ var capsMid=Math.max(0,(text.match(/\b[A-Z][a-z]{2,}\b/g)||[]).length-sc);
+ var concrete=numbers+capsMid;var density=w?concrete/(w/100):0;
+ var low=text.toLowerCase();
+ var covered=type.keywords.filter(function(k){return low.indexOf(k)!==-1;}).length;
+ var coverage=type.keywords.length?covered/type.keywords.length:0;
+ var prog=false;
+ if(target&&target.trim()){var tg=target.toLowerCase().match(/\b[a-z]{4,}\b/g)||[];prog=tg.some(function(x){return low.indexOf(x)!==-1;});}
+ var longS=sents.map(function(s){return{s:s,n:(s.match(/\b[\w'\u2019-]+\b/g)||[]).length};}).filter(function(o){return o.n>32;});
+ var dSpec=clamp((density<=0?25:density<1?45:density<2?62:density<3?76:86)-cliN*7+(numbers>0?5:0));
+ var dStruct=clamp(42+coverage*40+(paras.length>=4?16:paras.length*4)+(paras.length>8?-10:0));
+ var fillerRatio=w?filN/w:0,passiveRatio=pasN/sc,lenDev=target?Math.abs(w-target)/target:0;
+ var dConc=clamp(100-fillerRatio*420-passiveRatio*110-Math.min(lenDev,1)*45-advN*0.8);
+ var dClar=(flesch>=55&&flesch<=72)?90:(flesch>=45&&flesch<80)?74:(flesch>=30)?58:44;
+ dClar=clamp(dClar-Math.max(0,avg-22)*3-longS.length*4);
+ var dFit=clamp(38+(prog?42:0)+coverage*14+(concrete>3?10:0)-cliN*4);
+ var dims=[
+  {k:'Specificity and evidence',v:dSpec,why:concrete+' concrete detail'+(concrete===1?'':'s')+' across '+w+' words, '+cliN+' clich\u00e9'+(cliN===1?'':'s')+'.'},
+  {k:'Structure and coverage',v:dStruct,why:covered+' of '+type.keywords.length+' expected areas touched, '+paras.length+' paragraph'+(paras.length===1?'':'s')+'.'},
+  {k:'Conciseness',v:dConc,why:filN+' filler word'+(filN===1?'':'s')+', '+pasN+' passive phrase'+(pasN===1?'':'s')+', '+w+' of ~'+target+' target.'},
+  {k:'Clarity and readability',v:dClar,why:'Reading ease '+flesch+', average sentence '+avg.toFixed(1)+' words'+(longS.length?', '+longS.length+' very long':'')+'.'},
+  {k:'Focus and fit',v:dFit,why:prog?('Names the target program, '+covered+' on topic area'+(covered===1?'':'s')+'.'):('Program not named yet, '+covered+' on topic area'+(covered===1?'':'s')+'.')}
+ ];
+ var rb=type.rubric;
+ var overall=Math.round(dSpec*rb.specificity+dStruct*rb.structure+dConc*rb.conciseness+dClar*rb.clarity+dFit*rb.fit);
+ var fixCat={
+  'Specificity and evidence':cliN>0?'Cut the clich\u00e9s. Phrases like these read as filler and could describe anyone. Replace them with one real detail.':'Add concrete evidence. Name a project, a number, or a result instead of describing yourself in general terms.',
+  'Structure and coverage':coverage<0.6?('Cover the missing ground. This essay type expects you to touch '+type.keywords.slice(0,4).join(', ')+'. Some of that is thin or missing.'):'Break this into clearer paragraphs, one idea each, so a reader can follow the structure at a glance.',
+  'Conciseness':filN>=pasN?('Trim filler. You used '+filN+' soft word'+(filN===1?'':'s')+' like "very", "really", "just". Removing them makes every sentence hit harder.'):'Rewrite passive phrasing into active voice, so it is clear who did what.',
+  'Clarity and readability':longS.length?('Split your longest sentences. '+longS.length+' run past 32 words, which is hard for a tired reader to hold.'):'Simplify wording so the reading level matches a fast skim, which is how these are read.',
+  'Focus and fit':!prog?'Name your program. You have not mentioned the specific university or course you are applying to, which is the single most common weakness.':'Tie more of the essay to this specific program rather than the field in general.'
+ };
+ var worst=dims.slice().sort(function(a,b){return a.v-b.v;}).slice(0,3);
+ var fixes=worst.map(function(d){return fixCat[d.k];});
+ var str=[];
+ if(prog)str.push('You named your target program, which most drafts forget to do.');
+ if(cliN===0)str.push('No stock clich\u00e9s. Your language reads as your own.');
+ if(numbers>=2)str.push('You back claims with concrete numbers.');
+ if(dConc>=78)str.push('Tight, direct writing with little filler.');
+ if(coverage>=0.7)str.push('You cover the ground this essay type expects.');
+ if(target&&w>0&&Math.abs(w-target)/target<0.12)str.push('Length is close to the target for this essay.');
+ if(str.length===0)str.push('There is a real draft here to work with. The fixes above are the fastest way to lift the score.');
+ return {overall:overall,dims:dims,fixes:fixes,strengths:str,
+  stats:{wc:w,target:target,flesch:flesch,cliN:cliN,filN:filN,pasN:pasN,coverage:Math.round(coverage*100)},
+  ranges:{cli:cli,pas:pas,fil:fil}};
+}
+function band(s){return s>=80?'Strong draft':s>=65?'Solid, with clear fixes':s>=48?'Needs another pass':'Early draft';}
+function dcol(v){return v>=72?'var(--green)':v>=50?'var(--amber)':'var(--red)';}
+function ringColor(s){return s>=72?'#1A8245':s>=50?'#B45309':'#E30613';}
+function marks(text,r){
+ var chosen=[];
+ function push(arr,type){arr.forEach(function(x){var clash=chosen.some(function(c){return x.start<c.end&&x.end>c.start;});if(!clash)chosen.push({start:x.start,end:x.end,type:type});});}
+ push(r.cli,'cliche');push(r.pas,'passive');push(r.fil,'filler');
+ chosen.sort(function(a,b){return a.start-b.start;});
+ var out='',i=0;
+ chosen.forEach(function(s){out+=esc(text.slice(i,s.start));out+='<mark class="et-mk-'+s.type+'">'+esc(text.slice(s.start,s.end))+'</mark>';i=s.end;});
+ out+=esc(text.slice(i));
+ return out.replace(/\n/g,'<br>');
+}
+var history={};
+function run(){
+ var text=document.getElementById('rev-input').value;
+ var typeId=document.getElementById('rev-type').value;
+ var target=document.getElementById('rev-target').value;
+ var type=TYPES.filter(function(t){return t.id===typeId;})[0];
+ if(!text.trim()||!type)return;
+ var res=analyze(text,type,target);
+ document.getElementById('manuscript').innerHTML=marks(text,res.ranges);
+ var C=2*Math.PI*33;var col=ringColor(res.overall);
+ document.getElementById('score-ring').innerHTML='<svg width="82" height="82"><circle cx="41" cy="41" r="33" fill="none" stroke="#EFEFEA" stroke-width="6"/><circle cx="41" cy="41" r="33" fill="none" stroke="'+col+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+(C*(1-res.overall/100)).toFixed(1)+'"/></svg><span class="p">'+res.overall+'<em>/ 100</em></span>';
+ document.getElementById('score-band').textContent=band(res.overall);
+ var prev=history[typeId],dw=document.getElementById('delta-wrap');
+ if(prev!==undefined){var d=res.overall-prev;var cls=d>0?'up':d<0?'down':'flat';dw.innerHTML='<span class="et-delta '+cls+'">'+(d>0?'+':'')+d+' since your last review</span>';}else dw.innerHTML='';
+ history[typeId]=res.overall;
+ document.getElementById('dim-list').innerHTML=res.dims.map(function(d){return '<div class="et-dim"><div class="et-dim-top"><span>'+d.k+'</span><span class="et-dim-v">'+d.v+'</span></div><div class="et-dim-bar"><div class="et-dim-fill" style="width:'+d.v+'%;background:'+dcol(d.v)+'"></div></div><div class="et-dim-why">'+d.why+'</div></div>';}).join('');
+ document.getElementById('fix-list').innerHTML=res.fixes.map(function(f,i){return '<div class="et-fix"><div class="et-fix-n">'+(i+1)+'</div><div class="et-fix-t">'+f+'</div></div>';}).join('');
+ document.getElementById('str-list').innerHTML=res.strengths.map(function(s){return '<div class="et-str"><span class="ck">\u2713</span><span>'+s+'</span></div>';}).join('');
+ var st=res.stats;var overLen=st.target&&Math.abs(st.wc-st.target)/st.target>0.2;
+ document.getElementById('stat-grid').innerHTML=
+  '<div class="et-stat"><div class="sv'+(overLen?' flag':'')+'">'+st.wc+'</div><div class="sl">Words (target ~'+st.target+')</div></div>'+
+  '<div class="et-stat"><div class="sv">'+st.flesch+'</div><div class="sl">Reading ease</div></div>'+
+  '<div class="et-stat"><div class="sv'+(st.cliN>0?' flag':'')+'">'+st.cliN+'</div><div class="sl">Clich\u00e9s</div></div>'+
+  '<div class="et-stat"><div class="sv'+(st.filN>6?' flag':'')+'">'+st.filN+'</div><div class="sl">Filler words</div></div>'+
+  '<div class="et-stat"><div class="sv'+(st.pasN>4?' flag':'')+'">'+st.pasN+'</div><div class="sl">Passive phrases</div></div>'+
+  '<div class="et-stat"><div class="sv">'+st.coverage+'%</div><div class="sl">Topic coverage</div></div>';
+ document.getElementById('rev-out').classList.remove('et-hidden');
+}
+/* populate dropdown */
+var rt=document.getElementById('rev-type');
+TYPES.forEach(function(t){var o=document.createElement('option');o.value=t.id;o.textContent=DEST[t.dest]+' \u00b7 '+t.name;rt.appendChild(o);});
+document.getElementById('run-review').addEventListener('click',run);
+
+var SAMPLES={
+ weak:{type:'jp_sop',text:"Ever since I was young, I have always been passionate about technology. From a young age, I knew I wanted to make a difference in the world through engineering. Technology is really something that is very important in today's world and I have always dreamed of being part of it.\n\nI am a hardworking and well rounded team player who is a fast learner. I think I would be a good fit for your prestigious university because it is a great university with amazing facilities. I really want to study there because it is one of the best.\n\nMy goal is to change the world and reach for the stars. I believe that with the right education I can definitely achieve my dreams and make my family proud. This opportunity would be a dream come true for me."},
+ strong:{type:'jp_sop',text:"A failed sensor in my final year project made me realise how little I understood control systems. We had built a small autonomous rover, and it drove into a wall because our feedback loop reacted too slowly. That single afternoon turned a vague interest in robotics into a specific question I still want to answer: how do you make a system respond fast enough to matter.\n\nAt my university I took control theory and embedded systems, and for my thesis I built a traffic light model in Python that cut simulated wait times by 18 percent at a four way junction. The project taught me both the maths and the messy reality of getting hardware to behave.\n\nI want to work on low power control systems, not general electronics, because energy budgets are where the hardest tradeoffs live. Professor Sato's lab on low power architectures at Waseda University works on exactly this problem, and the course on real time systems maps directly onto the gap in my own background.\n\nFive years from now I want to design efficient control hardware for medical devices, where a slow response is not an inconvenience but a risk. This program is where the research I want to do and the training I still need meet."},
+ clear:{type:'jp_sop',text:''}
+};
+document.querySelectorAll('.et-chip').forEach(function(c){c.addEventListener('click',function(){
+ var s=SAMPLES[c.getAttribute('data-sample')];
+ document.getElementById('rev-input').value=s.text;
+ document.getElementById('rev-type').value=s.type;
+ if(c.getAttribute('data-sample')==='clear'){document.getElementById('rev-out').classList.add('et-hidden');document.getElementById('rev-target').value='';}
+ else run();
+});});
+
+/* pick up a draft handed over from Essay Builder */
+try{
+ var d=sessionStorage.getItem('ryogen_draft'),dt=sessionStorage.getItem('ryogen_draft_type');
+ if(d){document.getElementById('rev-input').value=d;if(dt)document.getElementById('rev-type').value=dt;sessionStorage.removeItem('ryogen_draft');sessionStorage.removeItem('ryogen_draft_type');run();}
+}catch(e){}
+});
+</script>
+</body></html>

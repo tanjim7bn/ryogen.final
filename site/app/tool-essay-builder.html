@@ -1,0 +1,222 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="color-scheme" content="light"><title>Essay Builder, Ryogen</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/css/styles.css"></head><body class="app">
+<header class="app-bar">
+<a href="/" class="app-logo"><img src="/assets/brand/ryogen-dark.png" alt="Ryogen"></a>
+<nav class="app-nav">
+<a href="/app/dashboard.html" class="app-link">Dashboard</a>
+<div class="app-dd"><button class="app-link active">Tools <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6l4 4 4-4"/></svg></button>
+<div class="app-dd-menu">
+<a href="/app/tool-smartmatch.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="9" r="6"/><path d="M14 14l3 3"/></svg></span>SmartMatch</a>
+<a href="/university-search.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="9" r="6"/><path d="M14 14l3 3"/></svg></span>University Search</a>
+<a href="/app/tool-essay-builder.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 16l1-4 8-8 3 3-8 8-4 1z"/></svg></span>Essay Builder</a>
+<a href="/app/tool-essay-review.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h9l3 3v9H4z"/><path d="M7 10l2 2 4-4"/></svg></span>Essay Review</a>
+<a href="/scholarship-search.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3l2 4 4 .5-3 3 .8 4L10 16l-3.8 1.5.8-4-3-3 4-.5z"/></svg></span>Scholarship Search</a>
+<a href="/country-roadmaps.html" class="app-dd-item"><span class="di"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 15l4-4 3 3 5-5"/><path d="M14 6h3v3"/></svg></span>Country Roadmaps</a>
+</div></div>
+</nav>
+<div class="app-right">
+<button class="app-bell" aria-label="Notifications"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="dot"></span></button>
+<div class="app-user"><span class="un">Tanjim</span><span class="app-avatar">T</span></div>
+</div>
+</header>
+
+<main class="app-main">
+<div class="app-head"><h1>Essay Builder</h1><p>Structure it here, you write the words. Ryogen walks you through one focused question at a time and assembles your answers into a first draft. It never writes the essay for you.</p></div>
+
+<div id="b-pick">
+  <div class="et-sub">Where are you applying</div>
+  <div class="et-pick-grid" id="dest-grid"></div>
+  <div id="type-wrap" class="et-hidden">
+    <div class="et-sub">Which essay</div>
+  <p style="font-size:.82rem;color:var(--muted);font-weight:300;margin:0 0 12px">Requirement labels reflect what programs on each route typically ask for. Individual programs vary, so always confirm on your program page before submitting.</p>
+    <div class="et-pick-grid" id="type-grid"></div>
+  </div>
+</div>
+
+<div id="b-build" class="et-hidden">
+  <div class="et-build">
+    <div class="et-rail" id="rail"></div>
+    <div>
+      <div class="et-qcard" id="q-card"></div>
+      <div class="et-draft">
+        <h4>Your draft so far</h4>
+        <div id="draft-view"><span class="et-draft-empty">Answer a question to start building your draft.</span></div>
+        <div class="et-nav" style="margin-top:20px">
+          <button class="et-btn" id="restart">Start over</button>
+          <button class="et-btn primary" id="to-review" style="margin-left:auto">Send draft to Essay Review</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ph-note">Front-end prototype. Runs fully in the browser with no AI. Drafts save to the student account once the backend is wired.</div>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+/* data model: destinations -> essay_types -> sections -> guided_questions */
+var DEST=[
+ {id:'jp',name:'Japan',flag:'Live destination',desc:'Research plans carry graduate and scholarship applications, and the language school route needs its own statement.'},
+ {id:'my',name:'Malaysia',flag:'Live destination',desc:'Personal statements are program dependent at undergraduate level, standard at postgraduate, and scholarships set their own essays.'}
+];
+var TYPES=[
+ {id:'jp_sop',dest:'jp',name:'Statement of Purpose',native:'English taught programs',req:'often',reader:'Read by admissions',
+  who:'Asked for by many programs as the core essay. Some set their own prompt and word band, so always check your program page.',target:800,
+  sections:[
+   {id:'open',nm:'Opening',purpose:'A specific moment or problem that pulled you toward this field. No childhood stories, no generic passion.',target:110,q:'What specific moment or problem first made this field feel important to you?',help:'One real scene, not a life summary.',ex:'A failed sensor in my final year project made me realise how little I understood control systems.'},
+   {id:'acad',nm:'Academic background',purpose:'The coursework, projects, and results that prove you can handle the program. Name real things.',target:150,q:'Which courses or projects prepared you most, and what did you actually build or find?',help:'Name the project. Add a number or result if you have one.',ex:'I built a traffic model in Python that cut simulated wait times by 18 percent.'},
+   {id:'field',nm:'Why this field',purpose:'A focused reason you chose this field over adjacent ones. Shows you understand it.',target:120,q:'Why this exact field and not a close neighbour to it?',help:'What question do you want to spend years on?',ex:'I want to work on energy efficient chips, not general electronics.'},
+   {id:'prog',nm:'Why this program',purpose:'Specific to this university: a lab, a professor, a course, a facility. This is where most drafts go generic.',target:150,q:'What at this specific university do you want to work with, and why does it fit your goal?',help:'Name the lab, professor, or course. Generic praise scores low.',ex:'Professor Sato\u2019s lab on low power architectures matches the chip work I want to do.'},
+   {id:'goal',nm:'Career goals',purpose:'A concrete direction after graduation that this program plausibly leads to.',target:110,q:'What do you want to be doing five years after this degree?',help:'A real role or contribution, not "make an impact".',ex:'I want to design low power hardware for medical devices back home.'},
+   {id:'close',nm:'Closing',purpose:'A short, forward looking close that ties your goal to this program.',target:70,q:'In one or two sentences, why is this program the right next step right now?',help:'Land it. Do not restate the whole essay.',ex:'This program is where the research I want to do and the training I need meet.'}
+  ]},
+ {id:'jp_research',dest:'jp',name:'Research Plan',native:'\u7814\u7A76\u8A08\u753B\u66F8',req:'required',reader:'Read by professors',
+  who:'Part of nearly every graduate research application in this destination, not only scholarships. Usually about two pages.',target:1000,
+  sections:[
+   {id:'theme',nm:'Research theme',purpose:'The precise topic in one or two sentences. Narrow beats broad: a focused question wins, a broad statement of interest gets rejected.',target:120,q:'State your research theme as specifically as you can.',help:'A reader should know exactly what you will study, where, and roughly how.',ex:'Predicting flood risk in coastal cities using low cost sensor networks.'},
+   {id:'bg',nm:'Background and gap',purpose:'A very brief state of the field with one or two examples, then the specific gap you will address. Long background sections are the most common padding mistake.',target:180,q:'What is the gap or unsolved problem your research addresses?',help:'Two to four sentences of context, then the gap.',ex:'Existing flood models need expensive equipment that most cities cannot afford.'},
+   {id:'rq',nm:'Research question',purpose:'One answerable question. Feasibility matters more than ambition, and your advisor will refine it later anyway.',target:120,q:'What is your central research question?',help:'Something you could actually answer within the program.',ex:'Can a network of low cost sensors predict local flooding within a useful window?'},
+   {id:'method',nm:'Methodology',purpose:'How you will do it: data, method, tools, step by step. This is where reviewers judge whether you can actually do research.',target:240,q:'How will you carry out the research, step by step?',help:'Data sources, methods, and tools. Show it is doable.',ex:'Deploy sensors at ten sites, collect a season of data, train a model, validate against records.'},
+   {id:'time',nm:'Timeline',purpose:'A realistic plan across the program length, phase by phase. Only include activities within the program itself.',target:150,q:'What will you do in year one versus later years?',help:'Rough but realistic phases inside the program.',ex:'Year one: setup and data. Year two: modelling. Year three: validation and writing.'},
+   {id:'sig',nm:'Significance',purpose:'Why the result matters, for the destination country, for your home country, or for bringing the two closer.',target:120,q:'If this works, what changes, and for whom?',help:'The real world payoff, stated concretely.',ex:'Cities without big budgets could get early flood warnings.'}
+  ]},
+ {id:'jp_mext',dest:'jp',name:'MEXT Field of Study and Research Plan',native:'Government scholarship, graduate',req:'required',reader:'Read by embassy and university reviewers',
+  who:'Required for graduate MEXT applicants on both the embassy and university tracks. Strict two page limit. Undergraduate MEXT applicants do not write this document.',target:900,
+  sections:[
+   {id:'past',nm:'Past field of study',purpose:'One or two sentences on what you studied before. Your proposed field must connect to it, so draw the line clearly.',target:80,q:'What did you study before, and how does it connect to what you propose now?',help:'Short. The connection matters more than the detail.',ex:'My software engineering degree, and especially my thesis on sensor data, leads directly into this proposal.'},
+   {id:'theme',nm:'Research theme',purpose:'The precise topic. Reviewers reject broad statements of interest and select narrow, methodical proposals.',target:120,q:'State your research theme as specifically as you can.',help:'Topic, place, and method in one breath if you can.',ex:'How feed in tariffs affected rooftop solar adoption in rural districts, using panel data.'},
+   {id:'gap',nm:'Existing research and gap',purpose:'Two to four sentences on the state of the field, then the gap. Do not write a literature review; show you can place your work.',target:150,q:'What is already known, and what is missing that you will address?',help:'Brief context, clear gap.',ex:'Prior work covers national policy, but little covers how local communities respond.'},
+   {id:'method',nm:'Method and study plan',purpose:'Steps, data, tools, and where each phase happens during the scholarship period. Only include activities inside the sponsored program.',target:250,q:'How will you carry out the research during the program, step by step?',help:'Be concrete and stay inside the program timeline.',ex:'Semester one: coursework and data access. Year one: collection. Year two: analysis and thesis.'},
+   {id:'why',nm:'Why this destination',purpose:'Why this research is best done here: a specific lab, dataset, professor, or national experience with the problem. Generic praise of the country scores poorly.',target:150,q:'Why does this research need to happen in this country specifically?',help:'Name the labs, professors, or unique conditions.',ex:'Professor Sato\u2019s lab holds the only decade long dataset on this, and the national grid transition is the live case I want to study.'},
+   {id:'contrib',nm:'Contribution',purpose:'How the result benefits the host country, your home country, or relations between them. Reviewers look for this explicitly.',target:120,q:'Who benefits from this research, at home and in the host country?',help:'Concrete beneficiaries, not slogans.',ex:'The method transfers directly to grid planning back home, and I will publish with my host lab.'}
+  ]},
+ {id:'jp_coe',dest:'jp',name:'Reason for Study Statement',native:'Language school route',req:'required',reader:'Read by an immigration officer',
+  who:'The written statement in a language school application, used for the Certificate of Eligibility. The reader checks that your plan is clear, consistent, and truthful, and that it matches your documents.',target:450,
+  sections:[
+   {id:'why',nm:'Why the language',purpose:'A concrete, believable reason you are committing one to two years to language study. Consistency with the rest of your file matters more than eloquence.',target:110,q:'Why do you want to study this language seriously, right now?',help:'A real, checkable reason. Vague enthusiasm reads as a red flag.',ex:'My goal is an engineering degree taught in the local language, and I need N2 level to qualify.'},
+   {id:'path',nm:'Study path so far',purpose:'What you have already done: classes, self study, test levels. Shows the plan started before the application.',target:100,q:'What have you already done to study the language or prepare for this move?',help:'Courses, hours, test levels, anything verifiable.',ex:'I completed 160 hours at a language institute and passed the entry level proficiency test.'},
+   {id:'plan',nm:'Plan after language school',purpose:'The specific next step: a university, a program, a career path. An officer wants to see the language school is a step, not a destination.',target:130,q:'What exactly will you do after finishing the language course?',help:'Name the kind of program or path you will apply to.',ex:'After reaching N2 I will apply to undergraduate engineering programs, sitting the entrance exam for international students.'},
+   {id:'fund',nm:'Funding in one line',purpose:'One clear sentence on who funds the study, matching your financial documents exactly. Mismatches between this statement and the papers are a common refusal reason.',target:60,q:'In one sentence, who is funding your study and living costs?',help:'Must match your sponsor documents in substance.',ex:'My father, a business owner, sponsors my tuition and living costs, as shown in the attached statements.'},
+   {id:'return',nm:'Longer term intent',purpose:'A short, honest close on where this leads. Clear intent reads better than grand promises.',target:60,q:'Where does this path lead for you in the longer term?',help:'Honest and short.',ex:'I intend to complete my degree and build my career in energy systems.'}
+  ]},
+ {id:'my_ps',dest:'my',name:'Personal Statement',native:'Undergraduate programs',req:'varies',reader:'Read by admissions',
+  who:'Asked for by some competitive programs, optional at many others. Writing a strong one anyway can only help, and scholarship applications often reuse it.',target:650,
+  sections:[
+   {id:'open',nm:'Opening',purpose:'A specific reason you are drawn to this course. Not a childhood dream.',target:100,q:'What specific experience made you want to study this?',help:'One real moment.',ex:'Helping my aunt manage her shop accounts made me want to study finance.'},
+   {id:'acad',nm:'Academic background',purpose:'Results, subjects, and projects that show you are ready.',target:140,q:'What have you done academically that prepares you for this course?',help:'Subjects, grades, or projects. Be specific.',ex:'I scored well in maths and built a small budgeting app for a school project.'},
+   {id:'field',nm:'Why this field',purpose:'A clear, personal reason for the field.',target:110,q:'Why does this field genuinely interest you?',help:'What pulls you to it?',ex:'I like turning messy numbers into decisions people can act on.'},
+   {id:'extra',nm:'Beyond the classroom',purpose:'Activities that show initiative or character, tied to your goal.',target:120,q:'What have you done outside class that connects to this path?',help:'Clubs, work, volunteering, self taught skills.',ex:'I ran the finances for our school event and taught myself spreadsheets.'},
+   {id:'goal',nm:'Career goals',purpose:'A concrete direction the course leads to.',target:100,q:'Where do you want this course to take you?',help:'A real role or plan.',ex:'I want to work in financial planning and later start my own practice.'},
+   {id:'close',nm:'Closing',purpose:'A short close linking your goal to this university.',target:70,q:'Why is this university the right place for that?',help:'Keep it specific and short.',ex:'This program focus on applied finance fits exactly where I want to go.'}
+  ]},
+ {id:'my_sop',dest:'my',name:'Statement of Purpose',native:'Postgraduate programs',req:'often',reader:'Read by admissions',
+  who:'Standard for postgraduate applications, usually alongside recommendation letters. Research based programs may also ask for a separate research proposal.',target:750,
+  sections:[
+   {id:'open',nm:'Opening',purpose:'The professional or academic moment that points to this degree. No career summary, one real turning point.',target:100,q:'What moment in your studies or work made this degree the clear next step?',help:'One scene, then move on.',ex:'Watching our clinic lose patient records in a flood made me want to build health data systems properly.'},
+   {id:'acad',nm:'Academic and work background',purpose:'Degree, results, projects, and any work experience that proves readiness. Numbers help.',target:170,q:'What in your background proves you can handle this program?',help:'Degree, thesis, work projects, results.',ex:'My thesis system handled records for a 40 bed ward and is still in use.'},
+   {id:'why',nm:'Why this program',purpose:'Specific to this university: a specialisation, a course, a research group, an industry link.',target:150,q:'What in this specific program matches what you need next?',help:'Name the specialisation or courses.',ex:'The health informatics track and the hospital partnership program cover exactly the gap in my training.'},
+   {id:'goal',nm:'Career goals',purpose:'The role or contribution this degree leads to, stated plainly.',target:120,q:'What will you do with this degree in the five years after graduating?',help:'A real role or plan.',ex:'I want to lead digitisation projects for mid size hospitals.'},
+   {id:'close',nm:'Closing',purpose:'A short close connecting your goal, this program, and now.',target:70,q:'Why is this program, now, the right move?',help:'Two sentences at most.',ex:'This program sits exactly between what I have built and what I want to build next.'}
+  ]},
+ {id:'my_sch',dest:'my',name:'Scholarship Essay',native:'Merit and government awards',req:'required',reader:'Read by the scholarship committee',
+  who:'Required by most university merit awards and government scholarship programs, each with its own prompt. This structure covers the ground most of them ask for.',target:600,
+  sections:[
+   {id:'open',nm:'Opening',purpose:'Who you are in one sharp, specific line.',target:90,q:'How would you introduce yourself in one specific sentence?',help:'Concrete, not a list of adjectives.',ex:'I am the first in my family to finish school and the one who fixes every device at home.'},
+   {id:'ach',nm:'Achievements',purpose:'Real, verifiable accomplishments with detail.',target:140,q:'What are your most concrete achievements?',help:'Name them. Add numbers where you can.',ex:'I led a team of six to a regional coding competition final.'},
+   {id:'merit',nm:'Why you',purpose:'The case for choosing you: merit, need, or both, stated plainly.',target:130,q:'Why should this scholarship go to you specifically?',help:'Be honest and specific. Avoid pleading.',ex:'This scholarship is the difference between studying full time and not studying at all.'},
+   {id:'goal',nm:'Goals',purpose:'What you will do with the opportunity.',target:110,q:'What will you do with this education?',help:'A concrete plan.',ex:'I want to build software that helps small shops track stock.'},
+   {id:'give',nm:'Contribution',purpose:'How you will give back. Specific, not slogans.',target:80,q:'How will you contribute to others with what you gain?',help:'Real and doable.',ex:'I want to teach coding to students in my old school.'}
+  ]}
+];
+
+var bType=null,bSec=0,answers={};
+function wc(s){return (s.match(/\b[\w'\u2019-]+\b/g)||[]).length;}
+
+var destGrid=document.getElementById('dest-grid');
+DEST.forEach(function(d){
+ var el=document.createElement('div');el.className='et-pick';el.setAttribute('data-id',d.id);
+ el.innerHTML='<div class="et-flag">'+d.flag+'</div><h3>'+d.name+'</h3><p>'+d.desc+'</p>';
+ el.addEventListener('click',function(){selectDest(d.id);});
+ destGrid.appendChild(el);
+});
+function selectDest(id){
+ document.querySelectorAll('#dest-grid .et-pick').forEach(function(p){p.classList.toggle('on',p.getAttribute('data-id')===id);});
+ var tg=document.getElementById('type-grid');tg.innerHTML='';
+ TYPES.filter(function(t){return t.dest===id;}).forEach(function(t){
+  var el=document.createElement('div');el.className='et-pick';el.setAttribute('data-id',t.id);
+  var badge=t.req==='required'?'<span class="et-req is-req">Required</span>':t.req==='often'?'<span class="et-req is-often">Often required</span>':'<span class="et-req is-var">Program dependent</span>';el.innerHTML='<div class="et-flag">'+t.native+' '+badge+'</div><h3>'+t.name+'</h3><p>'+t.who+'</p><div class="et-native">'+t.reader+' \u00b7 about '+t.target+' words</div>';
+  el.addEventListener('click',function(){startBuild(t.id);});
+  tg.appendChild(el);
+ });
+ document.getElementById('type-wrap').classList.remove('et-hidden');
+}
+function startBuild(id){
+ bType=TYPES.filter(function(t){return t.id===id;})[0];bSec=0;answers={};
+ document.getElementById('b-pick').classList.add('et-hidden');
+ document.getElementById('b-build').classList.remove('et-hidden');
+ renderRail();renderQ();renderDraft();window.scrollTo(0,0);
+}
+function renderRail(){
+ var rail=document.getElementById('rail');
+ rail.innerHTML=bType.sections.map(function(s,i){
+  var ans=(answers[s.id]||'').trim();
+  var cls='et-rail-sec'+(i===bSec?' cur':'')+(ans?' done':'');
+  return '<div class="'+cls+'" data-i="'+i+'"><span class="et-rail-dot"></span><span><span class="et-rail-nm">'+s.nm+'</span><br><span class="et-rail-ct">'+(ans?'Answered':'Empty')+'</span></span></div>';
+ }).join('');
+ rail.querySelectorAll('.et-rail-sec').forEach(function(el){el.addEventListener('click',function(){bSec=+el.getAttribute('data-i');renderRail();renderQ();});});
+}
+function renderQ(){
+ var s=bType.sections[bSec];var val=answers[s.id]||'';var w=wc(val);var over=w>s.target*1.4;
+ document.getElementById('q-card').innerHTML=
+  '<div class="et-qsec">Section '+(bSec+1)+' of '+bType.sections.length+' \u00b7 '+s.nm+'</div>'+
+  '<div class="et-purpose"><b>What admissions look for.</b> '+s.purpose+'</div>'+
+  '<div class="et-qtext">'+s.q+'</div>'+
+  '<div class="et-qhelp">'+s.help+'</div>'+
+  '<div class="et-qex"><b>Example.</b> '+s.ex+'</div>'+
+  '<textarea class="et-ta" id="ans" rows="4" placeholder="Write in your own words.">'+val.replace(/</g,'&lt;')+'</textarea>'+
+  '<div class="et-budget'+(over?' over':'')+'"><span id="wc">'+w+' words</span><span>Aim for about '+s.target+'</span></div>'+
+  '<div class="et-nav"><button class="et-btn" id="prev"'+(bSec===0?' disabled':'')+'>Back</button>'+
+  '<button class="et-btn primary" id="next">'+(bSec===bType.sections.length-1?'Finish draft':'Next section')+'</button></div>';
+ var ta=document.getElementById('ans');
+ ta.addEventListener('input',function(){
+  answers[s.id]=ta.value;var w2=wc(ta.value);
+  document.getElementById('wc').textContent=w2+' words';
+  document.querySelector('.et-budget').classList.toggle('over',w2>s.target*1.4);
+  renderDraft();
+ });
+ document.getElementById('prev').addEventListener('click',function(){if(bSec>0){bSec--;renderRail();renderQ();window.scrollTo(0,0);}});
+ document.getElementById('next').addEventListener('click',function(){
+  if(bSec<bType.sections.length-1){bSec++;renderRail();renderQ();window.scrollTo(0,0);}
+  else{renderRail();document.getElementById('draft-view').scrollIntoView({behavior:'smooth'});}
+ });
+}
+function renderDraft(){
+ var dv=document.getElementById('draft-view');
+ var any=bType.sections.some(function(s){return (answers[s.id]||'').trim();});
+ if(!any){dv.innerHTML='<span class="et-draft-empty">Answer a question to start building your draft.</span>';return;}
+ dv.innerHTML=bType.sections.map(function(s){
+  var a=(answers[s.id]||'').trim();if(!a)return '';
+  return '<div class="et-draft-h">'+s.nm+'</div><div class="et-draft-p">'+a.replace(/</g,'&lt;')+'</div>';
+ }).join('');
+}
+function assemble(){
+ return bType.sections.map(function(s){var a=(answers[s.id]||'').trim();return a?(s.nm+'\n'+a):'';}).filter(Boolean).join('\n\n');
+}
+document.getElementById('restart').addEventListener('click',function(){
+ bType=null;answers={};
+ document.getElementById('b-build').classList.add('et-hidden');
+ document.getElementById('b-pick').classList.remove('et-hidden');
+ document.querySelectorAll('#dest-grid .et-pick').forEach(function(p){p.classList.remove('on');});
+ document.getElementById('type-wrap').classList.add('et-hidden');
+ window.scrollTo(0,0);
+});
+document.getElementById('to-review').addEventListener('click',function(){
+ var draft=assemble();
+ if(!draft){alert('Answer at least one question first.');return;}
+ /* prototype handoff; backend will persist the draft to the account */
+ try{sessionStorage.setItem('ryogen_draft',draft);sessionStorage.setItem('ryogen_draft_type',bType.id);}catch(e){}
+ window.location.href='/app/tool-essay-review.html';
+});
+});
+</script>
+</body></html>
