@@ -1,0 +1,1 @@
+Campus, dorm, classroom and event photos go here. No image host was reachable from the build environment (network egress policy blocks Wikimedia/university sites); run ../download_full_set.py on a machine with internet access to populate this folder with alt-text-named photos.
