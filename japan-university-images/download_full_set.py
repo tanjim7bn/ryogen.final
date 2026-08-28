@@ -22,7 +22,16 @@ USAGE
     python3 download_full_set.py --photos 20         # photos per university
     python3 download_full_set.py --only waseda       # just matching universities
     python3 download_full_set.py --logos-only
-    python3 download_full_set.py --pace 0.5          # faster (be polite)
+    python3 download_full_set.py --width 2400        # bigger images
+    python3 download_full_set.py --pace 3            # gentler on Wikimedia
+
+RATE LIMITING: Wikimedia throttles bulk downloads and answers 429 with
+Retry-After of up to 600 seconds. This script avoids provoking that by
+downloading 1600px thumbnails rather than 6000px originals (a tenth of the
+bytes, and the right size for a website), by slowing itself down after every
+429, and by skipping a file instead of sitting out a ten-minute block. Rerun
+the script to fill in anything it skipped. Set CONTACT below to your email:
+Wikimedia throttles unidentified clients harder.
 
 It is resumable: files already on disk are skipped, so you can stop it with
 Ctrl-C and run it again. When it finishes it writes:
@@ -55,7 +64,10 @@ except ImportError:
 
 EN = "https://en.wikipedia.org/w/api.php"
 CO = "https://commons.wikimedia.org/w/api.php"
-HEADERS = {"User-Agent": "JapanUniversityImageFetcher/2.0 (personal study-abroad site asset collection)"}
+# Wikimedia asks bots to identify themselves with a contact address, and
+# throttles generic agents harder. Put your own email here.
+CONTACT = "your-email@example.com"
+HEADERS = {"User-Agent": f"JapanUniversityImageFetcher/3.0 ({CONTACT}) requests"}
 
 LOGO_DIR = "Japan University Logos"
 PIC_DIR = "Japan University Pictures"
@@ -190,16 +202,36 @@ def subject_of(title):
     return "campus"
 
 
-class Api:
-    """Polite MediaWiki client: paces requests and waits out 429s."""
+class RateLimited(Exception):
+    """Wikimedia asked us to wait longer than --max-wait."""
 
-    def __init__(self, pace):
+
+class Api:
+    """Polite MediaWiki client.
+
+    Wikimedia throttles bulk downloading hard: ask for too many bytes too
+    quickly and it answers 429 with Retry-After: 600. Rather than sit out
+    ten-minute blocks, this client slows itself down permanently after each
+    429 (so it stops provoking them), waits at most --max-wait, and then gives
+    up on that one file. Because the script is resumable, a later run picks up
+    whatever was skipped.
+    """
+
+    def __init__(self, pace, max_wait=180):
+        self.base_pace = pace
         self.pace = pace
+        self.max_wait = max_wait
         self.last = 0.0
+        self.throttles = 0
         self.session = requests.Session()
         self.session.headers.update(HEADERS)
 
-    def get(self, url, params=None, timeout=90, attempts=6):
+    def _slow_down(self):
+        """Each 429 makes every later request more patient, up to 15s apart."""
+        self.throttles += 1
+        self.pace = min(15.0, max(self.pace * 1.5, self.base_pace + 1))
+
+    def get(self, url, params=None, timeout=90, attempts=5):
         for attempt in range(attempts):
             gap = self.pace - (time.time() - self.last)
             if gap > 0:
@@ -213,9 +245,15 @@ class Api:
             finally:
                 self.last = time.time()
             if r.status_code == 429:
-                wait = int(r.headers.get("retry-after") or 0) or 30 * (attempt + 1)
-                print(f"    rate limited, waiting {wait}s")
-                time.sleep(wait)
+                asked = int(r.headers.get("retry-after") or 0) or 30 * (attempt + 1)
+                self._slow_down()
+                if asked > self.max_wait:
+                    raise RateLimited(
+                        f"Wikimedia asked for {asked}s (over --max-wait "
+                        f"{self.max_wait}s)")
+                print(f"    rate limited, waiting {asked}s "
+                      f"(pacing now {self.pace:.1f}s between requests)")
+                time.sleep(asked)
                 continue
             if r.status_code >= 500:
                 time.sleep(5 * (attempt + 1))
@@ -342,7 +380,7 @@ def commons_candidates(api, article, category, want):
 
 
 def fetch_photos(api, alt_name, article, category, programme, want, rows,
-                 min_width, per_subject):
+                 min_width, per_subject, width):
     have = len(existing(PIC_DIR, alt_name + " "))
     if have >= want:
         print(f"    photos: already have {have}")
@@ -354,7 +392,8 @@ def fetch_photos(api, alt_name, article, category, programme, want, rows,
         print("    !! no Commons photos found")
         return have
 
-    info = api.file_info(CO, titles[:400])
+    info = api.file_info(CO, titles[:400],
+                         thumb_width=width if width < 10 ** 6 else None)
     usable = []
     for title, ii in info.items():
         w, h = ii.get("width", 0), ii.get("height", 0)
@@ -395,14 +434,23 @@ def fetch_photos(api, alt_name, article, category, programme, want, rows,
         subject = subject_of(title)
         alt = f"{alt_name} {subject}"
         filename = f"{alt} {count + 1}{EXT.get(ii['mime'], '.jpg')}"
+        # A 1600px thumbnail is a fraction of a 6000px original: kinder to
+        # Wikimedia, and the right size for a website anyway.
+        url = ii["thumburl"] if ii.get("thumburl") and ii["width"] > width else ii["url"]
         try:
-            api.download(ii["url"], os.path.join(PIC_DIR, filename))
+            api.download(url, os.path.join(PIC_DIR, filename))
+        except RateLimited as e:
+            print(f"    {e}\n    skipping the rest of this university; "
+                  f"rerun later to fill the gap")
+            break
         except Exception as e:
             print(f"    photo failed ({e}), trying next")
             continue
         rows.append([PIC_DIR, filename, alt, alt_name, programme,
                      ii["descriptionurl"]])
-        print(f"    photo: {filename}  ({ii['width']}x{ii['height']})")
+        shown = min(width, ii["width"])
+        print(f"    photo: {filename}  ({shown}px wide, "
+              f"source {ii['width']}x{ii['height']})")
         count += 1
 
     if count == have:
@@ -458,10 +506,19 @@ def main():
                     help="photos per university (default 12)")
     ap.add_argument("--per-subject", type=int, default=3,
                     help="max photos of one subject per university (default 3)")
-    ap.add_argument("--min-width", type=int, default=1000, help="minimum photo width in px")
+    ap.add_argument("--min-width", type=int, default=1000,
+                    help="ignore source photos narrower than this")
+    ap.add_argument("--width", type=int, default=1600,
+                    help="download photos at this width (default 1600; use 0 "
+                         "for full-size originals, which Wikimedia throttles)")
+    ap.add_argument("--max-wait", type=int, default=180,
+                    help="longest rate-limit pause to sit out before skipping "
+                         "a file (default 180s)")
     ap.add_argument("--only", default="", help="only universities whose name contains this")
     ap.add_argument("--logos-only", action="store_true")
-    ap.add_argument("--pace", type=float, default=1.0, help="seconds between requests")
+    ap.add_argument("--pace", type=float, default=1.5,
+                    help="seconds between requests (raised automatically "
+                         "whenever Wikimedia pushes back)")
     args = ap.parse_args()
 
     os.chdir(os.path.dirname(os.path.abspath(__file__)) or ".")
@@ -479,7 +536,8 @@ def main():
                 if len(r) == 6 and os.path.exists(os.path.join(r[0], r[1])):
                     rows.append(r)
 
-    api = Api(args.pace)
+    api = Api(args.pace, args.max_wait)
+    width = args.width or 10 ** 6      # 0 means "give me the original"
     todo = [u for u in UNIVERSITIES if args.only.lower() in u[0]]
     logos = photos = 0
 
@@ -491,15 +549,20 @@ def main():
             if not args.logos_only:
                 photos += fetch_photos(api, alt_name, article, category,
                                        programme, args.photos, rows,
-                                       args.min_width, args.per_subject)
+                                       args.min_width, args.per_subject, width)
         except KeyboardInterrupt:
             print("\nstopped — rerun to resume")
             break
+        except RateLimited as e:
+            print(f"    !! {e} — skipping {article} for now")
         except Exception as e:
             print(f"    !! {article}: {e}")
 
     write_outputs(rows)
     print(f"\n{len(os.listdir(LOGO_DIR))} logos, {len(os.listdir(PIC_DIR))} photos")
+    if api.throttles:
+        print(f"Wikimedia throttled {api.throttles} request(s). Anything "
+              f"skipped is filled in by simply running this script again.")
     print(f"Wrote {ZIP_NAME}, alt-texts.csv and preview.html")
     print("Open preview.html in a browser to check the alt text against each image.")
 
