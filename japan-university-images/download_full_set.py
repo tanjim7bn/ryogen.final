@@ -163,7 +163,9 @@ LOGO_WORDS = re.compile(r"logo|emblem|crest|seal|wordmark|symbol mark|\bmon\b", 
 
 # Wikipedia/Commons furniture and non-photo files we never want.
 JUNK = re.compile(
-    r"commons-logo|wiki\w*\.(png|svg)|icon|flag of|\bmap\b|location map|arrow|"
+    r"commons-logo|wiki[a-z]*-logo|wikipedia|wikisource|wikimedia|wikiquote|"
+    r"wikidata|wikibooks|wikinews|wikiversity|wikivoyage|wikispecies|wiktionary|"
+    r"icon|flag of|\bmap\b|location map|arrow|"
     r"question|edit-|padlock|pog\.svg|ambox|crystal|nuvola|folder|open access|"
     r"clock|increase|decrease|steady|symbol (support|oppose)|disambig|barnstar|"
     r"blue check|red x|speaker|coat of arms|diagram|chart|graph|logo of|"
