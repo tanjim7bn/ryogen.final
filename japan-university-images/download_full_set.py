@@ -64,10 +64,14 @@ except ImportError:
 
 EN = "https://en.wikipedia.org/w/api.php"
 CO = "https://commons.wikimedia.org/w/api.php"
-# Wikimedia asks bots to identify themselves with a contact address, and
-# throttles generic agents harder. Put your own email here.
-CONTACT = "your-email@example.com"
-HEADERS = {"User-Agent": f"JapanUniversityImageFetcher/3.0 ({CONTACT}) requests"}
+# Wikimedia likes clients to identify themselves with a contact address, but
+# it hard-blocks (403) anything that looks like a placeholder, example.com
+# included. So: put your real email here if you like, or leave it empty and
+# no contact is sent at all.
+CONTACT = ""
+_usable = CONTACT and "example.com" not in CONTACT and "@" in CONTACT
+HEADERS = {"User-Agent": "JapanUniversityImageFetcher/3.0 "
+                         + (f"({CONTACT}) " if _usable else "") + "requests"}
 
 LOGO_DIR = "Japan University Logos"
 PIC_DIR = "Japan University Pictures"
@@ -245,15 +249,19 @@ class Api:
             finally:
                 self.last = time.time()
             if r.status_code == 429:
-                asked = int(r.headers.get("retry-after") or 0) or 30 * (attempt + 1)
+                asked = int(r.headers.get("retry-after") or 0)
                 self._slow_down()
                 if asked > self.max_wait:
                     raise RateLimited(
                         f"Wikimedia asked for {asked}s (over --max-wait "
                         f"{self.max_wait}s)")
-                print(f"    rate limited, waiting {asked}s "
+                # A repeated Retry-After of 10s means the cap is sustained, so
+                # honouring it literally just fails five times in a row. Back
+                # off exponentially instead, never below what was asked.
+                wait = min(max(asked, 5 * 2 ** attempt), self.max_wait)
+                print(f"    rate limited, waiting {wait}s "
                       f"(pacing now {self.pace:.1f}s between requests)")
-                time.sleep(asked)
+                time.sleep(wait)
                 continue
             if r.status_code >= 500:
                 time.sleep(5 * (attempt + 1))
@@ -283,7 +291,11 @@ class Api:
         return out
 
     def download(self, url, path):
-        r = self.get(url, timeout=180)
+        # The API appends utm_* tracking parameters to file URLs; they are not
+        # part of the file and have caused mangled filenames, so drop them.
+        if "utm_" in url:
+            url = url.split("?")[0]
+        r = self.get(url, timeout=180, attempts=7)
         if not r.content or r.content[:1] == b"{":
             raise RuntimeError("empty or non-image response")
         with open(path + ".part", "wb") as f:
