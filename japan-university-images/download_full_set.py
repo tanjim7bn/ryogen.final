@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 """
-Downloads logos and campus photos for Japanese universities with English-taught
-programs, names every file after its alt text, and zips the result into two
-folders: "Japan University Logos" and "Japan University Pictures".
+Downloads logos and campus photos for the 34 Japanese universities that offer
+BACHELOR'S degrees taught in English, names every file after its alt text, and
+zips the result into two folders: "Japan University Logos" and "Japan
+University Pictures".
+
+Every university in the list is there because it runs an English-medium
+undergraduate programme (Waseda SILS, UTokyo PEAK, Sophia FLA, Keio PEARL,
+TIU E-Track, APU APS/APM, Akita International, and so on). The programme is
+recorded next to every image in alt-texts.csv.
 
 Sources: English Wikipedia (logos, from each university's article infobox) and
 Wikimedia Commons (photos, from each university's Commons category — campus,
@@ -13,7 +19,7 @@ USAGE
     python3 download_full_set.py
 
     # useful options
-    python3 download_full_set.py --photos 5          # photos per university
+    python3 download_full_set.py --photos 20         # photos per university
     python3 download_full_set.py --only waseda       # just matching universities
     python3 download_full_set.py --logos-only
     python3 download_full_set.py --pace 0.5          # faster (be polite)
@@ -58,50 +64,81 @@ ZIP_NAME = "Japan University Images.zip"
 EXT = {"image/jpeg": ".jpg", "image/png": ".png", "image/gif": ".gif",
        "image/svg+xml": ".svg", "image/webp": ".webp"}
 
-# (alt-text name, English Wikipedia article, Commons category or None to guess)
+# Every university here offers at least one BACHELOR'S degree that can be
+# completed in English. The fourth field names that programme and is written
+# into alt-texts.csv, so the pack documents why each university is included.
+# (alt-text name, English Wikipedia article, Commons category or None, programme)
 UNIVERSITIES = [
-    ("tokyo international university", "Tokyo International University", None),
-    ("ritsumeikan asia pacific university", "Ritsumeikan Asia Pacific University", None),
-    ("kyoto university of advanced science", "Kyoto University of Advanced Science", None),
-    ("waseda university", "Waseda University", "Waseda University"),
-    ("sophia university", "Sophia University (Japan)", "Sophia University"),
-    ("temple university japan campus", "Temple University, Japan Campus", None),
-    ("keio university", "Keio University", "Keio University"),
-    ("university of tokyo", "University of Tokyo", "University of Tokyo"),
-    ("kyoto university", "Kyoto University", "Kyoto University"),
-    ("osaka university", "Osaka University", "Osaka University"),
-    ("tohoku university", "Tohoku University", "Tohoku University"),
-    ("nagoya university", "Nagoya University", "Nagoya University"),
-    ("kyushu university", "Kyushu University", "Kyushu University"),
-    ("hokkaido university", "Hokkaido University", "Hokkaido University"),
-    ("university of tsukuba", "University of Tsukuba", "University of Tsukuba"),
-    ("hiroshima university", "Hiroshima University", "Hiroshima University"),
-    ("kobe university", "Kobe University", "Kobe University"),
-    ("chiba university", "Chiba University", "Chiba University"),
-    ("okayama university", "Okayama University", "Okayama University"),
-    ("kanazawa university", "Kanazawa University", "Kanazawa University"),
-    ("yokohama national university", "Yokohama National University", None),
-    ("international christian university", "International Christian University", None),
-    ("meiji university", "Meiji University", "Meiji University"),
-    ("rikkyo university", "Rikkyo University", "Rikkyo University"),
-    ("hosei university", "Hosei University", "Hosei University"),
-    ("chuo university", "Chuo University", "Chuo University"),
-    ("aoyama gakuin university", "Aoyama Gakuin University", None),
-    ("doshisha university", "Doshisha University", "Doshisha University"),
-    ("ritsumeikan university", "Ritsumeikan University", "Ritsumeikan University"),
-    ("kwansei gakuin university", "Kwansei Gakuin University", None),
-    ("kansai university", "Kansai University", "Kansai University"),
-    ("akita international university", "Akita International University", None),
-    ("soka university", "Soka University", "Soka University"),
-    ("toyo university", "Toyo University", "Toyo University"),
-    ("tokyo university of science", "Tokyo University of Science", None),
-    ("institute of science tokyo", "Institute of Science Tokyo", "Tokyo Institute of Technology"),
-    ("nagoya university of commerce and business", "Nagoya University of Commerce & Business", None),
-    ("international university of japan", "International University of Japan", None),
-    ("tokai university", "Tokai University", "Tokai University"),
-    ("gakushuin university", "Gakushuin University", "Gakushuin University"),
-    ("ryukoku university", "Ryukoku University", "Ryukoku University"),
-    ("kindai university", "Kindai University", "Kindai University"),
+    ("tokyo international university", "Tokyo International University", None,
+     "E-Track: BA Business Economics, International Relations, Digital Business & Innovation"),
+    ("ritsumeikan asia pacific university", "Ritsumeikan Asia Pacific University",
+     "Ritsumeikan Asia Pacific University",
+     "College of Asia Pacific Studies (APS) and College of International Management (APM)"),
+    ("kyoto university of advanced science", "Kyoto University of Advanced Science", None,
+     "Faculty of Engineering, English-taught BEng"),
+    ("waseda university", "Waseda University", "Waseda University",
+     "School of International Liberal Studies (SILS), EDESSA, English-based Science & Engineering"),
+    ("sophia university", "Sophia University (Japan)", "Sophia University",
+     "Faculty of Liberal Arts (FLA), Green Science and Green Engineering"),
+    ("temple university japan campus", "Temple University, Japan Campus", None,
+     "Full US bachelor's degrees taught entirely in English"),
+    ("keio university", "Keio University", "Keio University",
+     "PEARL (Economics) and GIGA (Environment and Information Studies)"),
+    ("university of tokyo", "University of Tokyo", "University of Tokyo",
+     "PEAK - Programs in English at Komaba; Global Science Course"),
+    ("kyoto university", "Kyoto University", "Kyoto University",
+     "Kyoto iUP; Faculty of Engineering international course"),
+    ("osaka university", "Osaka University", "Osaka University",
+     "International College: Human Sciences (HUS) and International Undergraduate Program in Science"),
+    ("tohoku university", "Tohoku University", "Tohoku University",
+     "Future Global Leadership: Applied Marine Biology, IMAC-U, Advanced Molecular Chemistry"),
+    ("nagoya university", "Nagoya University", "Nagoya University",
+     "G30 International Programs: Automotive Engineering, Chemistry, Physics, Biology, Social Sciences"),
+    ("kyushu university", "Kyushu University", "Kyushu University",
+     "International Undergraduate Programs: Engineering, Bioresource and Bioenvironment"),
+    ("hokkaido university", "Hokkaido University", "Hokkaido University",
+     "Integrated Science Program (ISP) and Modern Japanese Studies (MJSP)"),
+    ("university of tsukuba", "University of Tsukuba", "University of Tsukuba",
+     "Bachelor's Program in Global Issues (BPGI); Interdisciplinary Engineering"),
+    ("hiroshima university", "Hiroshima University", "Hiroshima University",
+     "School of Integrated Global Studies (IGS)"),
+    ("okayama university", "Okayama University", "Okayama University",
+     "Discovery Program for Global Learners"),
+    ("akita international university", "Akita International University", None,
+     "All undergraduate courses in English: Global Business, Global Studies, Global Connectivity"),
+    ("international christian university", "International Christian University",
+     "International Christian University",
+     "Bilingual liberal arts college with English-taught majors"),
+    ("meiji university", "Meiji University", "Meiji University",
+     "School of Global Japanese Studies, English track"),
+    ("rikkyo university", "Rikkyo University", "Rikkyo University",
+     "Global Liberal Arts Program (GLAP)"),
+    ("hosei university", "Hosei University", "Hosei University",
+     "Global and Interdisciplinary Studies (GIS); Institute of Integrated Sciences"),
+    ("chuo university", "Chuo University", "Chuo University",
+     "Global Management (GLOMAC) and International Business Law (GLIB)"),
+    ("doshisha university", "Doshisha University", "Doshisha University",
+     "Institute for the Liberal Arts (ILA)"),
+    ("ritsumeikan university", "Ritsumeikan University", "Ritsumeikan University",
+     "Global Studies Major, Community and Regional Policy Studies, American University joint degree"),
+    ("kwansei gakuin university", "Kwansei Gakuin University", "Kwansei Gakuin University",
+     "School of International Studies (SIS), English-based degree"),
+    ("soka university", "Soka University", "Soka University",
+     "Faculty of International Liberal Arts (FILA)"),
+    ("toyo university", "Toyo University", "Toyo University",
+     "Faculty of Global and Regional Studies; Global Innovation Studies (GINOS)"),
+    ("nagoya university of commerce and business", "Nagoya University of Commerce & Business", None,
+     "Global BBA taught in English"),
+    ("yamanashi gakuin university", "Yamanashi Gakuin University", None,
+     "International College of Liberal Arts (iCLA), fully English-medium"),
+    ("miyazaki international college", "Miyazaki International College", None,
+     "All undergraduate classes taught in English"),
+    ("shibaura institute of technology", "Shibaura Institute of Technology", None,
+     "Innovative Global Program (IGP), English-taught BEng"),
+    ("university of aizu", "University of Aizu", "University of Aizu",
+     "Advanced ICT Global Program (ICTG), all-English computer science course"),
+    ("kansai gaidai university", "Kansai Gaidai University", None,
+     "College of Global Engagement, English-taught BA"),
 ]
 
 # Words that mean "this file is a logo/emblem", used to find logos and to keep
@@ -129,6 +166,10 @@ SUBJECTS = [
     (re.compile(r"gym|stadium|sports|field|pool|court", re.I), "sports facility"),
     (re.compile(r"laborator|\blab\b|research (center|centre|institute)", re.I), "laboratory"),
     (re.compile(r"museum|gallery|archive", re.I), "museum"),
+    (re.compile(r"clock tower|monument|statue|fountain|memorial", re.I), "landmark"),
+    (re.compile(r"snow|winter|autumn|spring|cherry blossom|sakura|ginkgo|"
+                r"night|evening|illuminat", re.I), "campus in season"),
+    (re.compile(r"student|graduat|class of|club|circle|orientation", re.I), "students"),
     (re.compile(r"building|hall|tower|faculty of|school of|department of|"
                 r"institute|center|centre|annex", re.I), "building"),
     (re.compile(r"campus|aerial|panorama|ground|garden|quad", re.I), "campus"),
@@ -136,9 +177,10 @@ SUBJECTS = [
 
 
 # When a university has more photos than we need, take these subjects first.
-PRIORITY = ["campus", "dormitory", "classroom", "event", "building", "library",
-            "campus gate", "auditorium", "cafeteria", "sports facility",
-            "laboratory", "museum"]
+PRIORITY = ["campus", "dormitory", "classroom", "event", "students", "building",
+            "library", "campus gate", "auditorium", "cafeteria",
+            "sports facility", "laboratory", "campus in season", "landmark",
+            "museum"]
 
 
 def subject_of(title):
@@ -216,7 +258,7 @@ def existing(directory, prefix):
     return [f for f in os.listdir(directory) if f.lower().startswith(prefix.lower())]
 
 
-def fetch_logo(api, alt_name, article, rows):
+def fetch_logo(api, alt_name, article, programme, rows):
     if existing(LOGO_DIR, alt_name + " logo"):
         print("    logo: already downloaded")
         return True
@@ -257,7 +299,8 @@ def fetch_logo(api, alt_name, article, rows):
     ext = ".png" if svg else EXT.get(ii.get("mime"), ".png")
     filename = f"{alt_name} logo{ext}"
     api.download(url, os.path.join(LOGO_DIR, filename))
-    rows.append([LOGO_DIR, filename, f"{alt_name} logo", alt_name, ii["descriptionurl"]])
+    rows.append([LOGO_DIR, filename, f"{alt_name} logo", alt_name, programme,
+                 ii["descriptionurl"]])
     print(f"    logo: {filename}")
     return True
 
@@ -270,7 +313,7 @@ def commons_candidates(api, article, category, want):
     if category is None and "(" in article:
         queue.append("Category:" + article.split("(")[0].strip())
 
-    while queue and len(titles) < want * 8:
+    while queue and len(titles) < want * 12:
         cat = queue.pop(0)
         if cat in seen_cats:
             continue
@@ -282,19 +325,24 @@ def commons_candidates(api, article, category, want):
             continue
         for m in data.get("query", {}).get("categorymembers", []):
             if m["title"].startswith("Category:"):
-                if len(seen_cats) < 8:
+                if len(seen_cats) < 30:
                     queue.append(m["title"])
             else:
                 titles.append(m["title"])
 
-    if len(titles) < want:
-        data = api.query(CO, action="query", generator="search",
-                         gsrsearch=f'"{article}"', gsrnamespace=6, gsrlimit=50)
-        titles += [p["title"] for p in data.get("query", {}).get("pages", [])]
+    # Text search backfills universities with a thin or missing category.
+    if len(titles) < want * 2:
+        for search in (f'"{article}"', article):
+            data = api.query(CO, action="query", generator="search",
+                             gsrsearch=search, gsrnamespace=6, gsrlimit=100)
+            titles += [p["title"] for p in data.get("query", {}).get("pages", [])]
+            if len(titles) >= want * 2:
+                break
     return list(dict.fromkeys(titles))
 
 
-def fetch_photos(api, alt_name, article, category, want, rows, min_width):
+def fetch_photos(api, alt_name, article, category, programme, want, rows,
+                 min_width, per_subject):
     have = len(existing(PIC_DIR, alt_name + " "))
     if have >= want:
         print(f"    photos: already have {have}")
@@ -306,7 +354,7 @@ def fetch_photos(api, alt_name, article, category, want, rows, min_width):
         print("    !! no Commons photos found")
         return have
 
-    info = api.file_info(CO, titles[:120])
+    info = api.file_info(CO, titles[:400])
     usable = []
     for title, ii in info.items():
         w, h = ii.get("width", 0), ii.get("height", 0)
@@ -323,6 +371,9 @@ def fetch_photos(api, alt_name, article, category, want, rows, min_width):
     by_subject, ordered = {}, []
     for title, ii in usable:
         by_subject.setdefault(subject_of(title), []).append((title, ii))
+    # Cap each subject so one well-photographed building cannot fill the quota.
+    for subject in by_subject:
+        by_subject[subject] = by_subject[subject][:per_subject]
     order = sorted(by_subject, key=lambda s: PRIORITY.index(s) if s in PRIORITY else 99)
     while len(ordered) < len(usable):
         added = False
@@ -349,7 +400,8 @@ def fetch_photos(api, alt_name, article, category, want, rows, min_width):
         except Exception as e:
             print(f"    photo failed ({e}), trying next")
             continue
-        rows.append([PIC_DIR, filename, alt, alt_name, ii["descriptionurl"]])
+        rows.append([PIC_DIR, filename, alt, alt_name, programme,
+                     ii["descriptionurl"]])
         print(f"    photo: {filename}  ({ii['width']}x{ii['height']})")
         count += 1
 
@@ -362,16 +414,18 @@ def write_outputs(rows):
     rows.sort(key=lambda r: (r[0], r[1]))
     with open("alt-texts.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["category", "filename", "alt_text", "university", "source_url"])
+        w.writerow(["category", "filename", "alt_text", "university",
+                    "english_bachelor_program", "source_url"])
         w.writerows(rows)
 
     cards = []
-    for category, filename, alt, uni, src in rows:
+    for category, filename, alt, uni, programme, src in rows:
         path = html.escape(f"{category}/{filename}")
         cards.append(
             f'<figure><img src="{path}" alt="{html.escape(alt)}" loading="lazy">'
             f'<figcaption><b>{html.escape(alt)}</b><br>'
             f'<code>{html.escape(filename)}</code><br>'
+            f'<span class=prog>{html.escape(programme)}</span><br>'
             f'<a href="{html.escape(src)}">source</a></figcaption></figure>')
     with open("preview.html", "w", encoding="utf-8") as f:
         f.write(
@@ -382,9 +436,10 @@ def write_outputs(rows):
             "figure{margin:0;background:#fff;border:1px solid #ddd;border-radius:8px;padding:10px}"
             "img{width:100%;height:170px;object-fit:contain;background:#fff}"
             "figcaption{font-size:12px;line-height:1.45;margin-top:8px;word-break:break-word}"
-            "code{color:#666}</style>"
+            "code{color:#666}.prog{color:#0a7;font-size:11px}</style>"
             f"<h1>Japan University Images &mdash; {len(rows)} files</h1>"
-            "<p>Check that every picture matches the alt text under it.</p>"
+            "<p>Every university below offers an English-taught bachelor's "
+            "degree, named in green. Check each picture against its alt text.</p>"
             "<div class='grid'>" + "".join(cards) + "</div>")
 
     with zipfile.ZipFile(ZIP_NAME, "w", zipfile.ZIP_DEFLATED) as z:
@@ -399,7 +454,10 @@ def write_outputs(rows):
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--photos", type=int, default=4, help="photos per university (default 4)")
+    ap.add_argument("--photos", type=int, default=12,
+                    help="photos per university (default 12)")
+    ap.add_argument("--per-subject", type=int, default=3,
+                    help="max photos of one subject per university (default 3)")
     ap.add_argument("--min-width", type=int, default=1000, help="minimum photo width in px")
     ap.add_argument("--only", default="", help="only universities whose name contains this")
     ap.add_argument("--logos-only", action="store_true")
@@ -415,21 +473,25 @@ def main():
         with open("alt-texts.csv", newline="", encoding="utf-8") as f:
             reader = csv.reader(f)
             next(reader, None)
-            rows = [r for r in reader if len(r) == 5
-                    and os.path.exists(os.path.join(r[0], r[1]))]
+            for r in reader:
+                if len(r) == 5:            # CSV written before the programme column
+                    r = r[:4] + ["", r[4]]
+                if len(r) == 6 and os.path.exists(os.path.join(r[0], r[1])):
+                    rows.append(r)
 
     api = Api(args.pace)
     todo = [u for u in UNIVERSITIES if args.only.lower() in u[0]]
     logos = photos = 0
 
-    for i, (alt_name, article, category) in enumerate(todo, 1):
-        print(f"[{i}/{len(todo)}] {article}")
+    for i, (alt_name, article, category, programme) in enumerate(todo, 1):
+        print(f"[{i}/{len(todo)}] {article}  —  {programme}")
         try:
-            if fetch_logo(api, alt_name, article, rows):
+            if fetch_logo(api, alt_name, article, programme, rows):
                 logos += 1
             if not args.logos_only:
                 photos += fetch_photos(api, alt_name, article, category,
-                                       args.photos, rows, args.min_width)
+                                       programme, args.photos, rows,
+                                       args.min_width, args.per_subject)
         except KeyboardInterrupt:
             print("\nstopped — rerun to resume")
             break
